@@ -2,17 +2,24 @@ import { useEffect, useRef, useState } from 'react';
 
 type MenuItem = {
   label: string;
-  action: 'start' | 'characters' | 'settings' | 'quit';
+  action: 'start' | 'characters' | 'character' | 'settings' | 'quit';
 };
 
 const menuItems: MenuItem[] = [
   { label: 'MULAI', action: 'start' },
+  { label: 'HOME', action: 'home' },
   { label: 'KARAKTER', action: 'characters' },
+  { label: 'KITA', action: 'character-kita' },
+  { label: 'NIJIKA', action: 'character-nijika' },
+  { label: 'RYO', action: 'character-ryo' },
+  { label: 'HITORI', action: 'character-hitori' },
+  { label: 'SEIKA', action: 'character-seika' },
+  { label: 'KIKURI', action: 'character-kikuri' },
   { label: 'PENGATURAN', action: 'settings' },
   { label: 'KELUAR', action: 'quit' },
 ];
 
-const Menu = ({ onStart }: { onStart: () => void }) => {
+const Menu = ({ onStart, onHome, onCharacter }: { onStart: () => void; onHome: () => void; onCharacter: (name: string) => void }) => {
   const [selected, setSelected] = useState(0);
   const [leaving, setLeaving] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -21,17 +28,20 @@ const Menu = ({ onStart }: { onStart: () => void }) => {
     if (leaving) return;
     if (action === 'start') {
       setLeaving(true);
-      // beri waktu animasi zoom + fade-out sebelum masuk scene
       window.setTimeout(() => onStart(), 700);
+    } else if (action === 'home') {
+      setLeaving(true);
+      window.setTimeout(() => onHome(), 700);
     } else if (action === 'quit') {
       setLeaving(true);
       window.setTimeout(() => {
-        // browser biasanya blokir window.close() untuk tab bukan hasil script
         window.open('', '_self');
         window.close();
       }, 700);
+    } else if (action.startsWith('character-')) {
+      const name = action.replace('character-', '');
+      onCharacter(name);
     } else {
-      // placeholder karakter / pengaturan
       alert(
         action === 'characters'
           ? 'Karakter — fitur belum tersedia 🎸'

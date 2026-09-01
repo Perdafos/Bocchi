@@ -9,7 +9,7 @@ gsap.registerPlugin(ScrollTrigger);
 const characters = [
   {
     name: 'Seika',
-    src: '/img/seiki.png',
+    src: '/img/seiki/seiki.png',
     tx: -60,
     ty: -80,
     w: 'w-20',
@@ -20,7 +20,7 @@ const characters = [
   },
   {
     name: 'Kikuri',
-    src: '/img/kikkuri.png',
+    src: '/img/kikkuri/kikkuri.png',
     tx: 80,
     ty: -80,
     w: 'w-32',
@@ -31,7 +31,7 @@ const characters = [
   },
   {
     name: 'Hitori',
-    src: '/img/goto.png',
+    src: '/img/hitori/goto.png',
     tx: -360,
     ty: -72,
     w: 'w-39',
@@ -42,7 +42,7 @@ const characters = [
   },
   {
     name: 'Nijika',
-    src: '/img/nijika.png',
+    src: '/img/nijika/nijika.png',
     tx: 176,
     ty: -98,
     w: 'w-48',
@@ -53,7 +53,7 @@ const characters = [
   },
   {
     name: 'Ryo',
-    src: '/img/ryo.png',
+    src: '/img/ryo/ryo.png',
     tx: -720,
     ty: -96,
     w: 'w-84',
@@ -64,7 +64,7 @@ const characters = [
   },
   {
     name: 'Kita',
-    src: '/img/kita.png',
+    src: '/img/kita/kita.png',
     tx: 400,
     ty: -80,
     w: 'w-74',
