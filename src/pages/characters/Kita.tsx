@@ -134,7 +134,6 @@ const Kita = ({ onBack }: KitaProps) => {
     };
   }, [currentSlide]);
 
-  // Smooth Tuing-Tuing Animation
   const playTuingAnimation = () => {
     if (!scissorsRef.current || isTearing) return;
 
@@ -151,7 +150,6 @@ const Kita = ({ onBack }: KitaProps) => {
       .to(scissorsRef.current, { scaleX: 1, scaleY: 1, duration: 0.25, ease: 'elastic.out(1, 0.4)' });
   };
 
-  // Pointer Drag Event Handlers
   const handlePointerDown = (e: React.PointerEvent) => {
     if (isTearing) return;
     setIsDragging(true);
@@ -181,7 +179,6 @@ const Kita = ({ onBack }: KitaProps) => {
     if (bounceTweenRef.current) bounceTweenRef.current.play();
   };
 
-  // Ultra-Smooth Ticket Tearing Animation
   const executeTearAnimation = () => {
     if (isTearing) return;
     setIsTearing(true);
@@ -220,8 +217,18 @@ const Kita = ({ onBack }: KitaProps) => {
     );
   };
 
+  // Animasi Masuk (Entrance Animation) saat halaman dibuka dari tombol MORE
   useEffect(() => {
-    const ctx = gsap.context(() => {}, sectionRef);
+    const ctx = gsap.context(() => {
+      const tl = gsap.timeline();
+
+      tl.fromTo(
+        sectionRef.current,
+        { opacity: 0, scale: 0.92, filter: 'blur(8px)' },
+        { opacity: 1, scale: 1, filter: 'blur(0px)', duration: 0.7, ease: 'power3.out' }
+      );
+    }, sectionRef);
+
     return () => ctx.revert();
   }, []);
 
@@ -326,7 +333,6 @@ const Kita = ({ onBack }: KitaProps) => {
             <p className="font-bold">They're</p>
             <p>go to concert?!!</p>
           </div>
-          {/* Tombol Kembali ke Main Menu */}
           <button
             onClick={onBack}
             className="flex items-center gap-1.5 px-3 py-1.5 bg-[#C82329] text-white font-mono font-bold text-xs border-2 border-white shadow-[3px_3px_0px_#fff] hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-[1px_1px_0px_#fff] transition-all cursor-pointer uppercase pointer-events-auto"
@@ -342,7 +348,6 @@ const Kita = ({ onBack }: KitaProps) => {
 
       {/* --- STACKED TICKET CAROUSEL CONTAINER --- */}
       <div className="absolute top-1/2 right-[3%] -translate-y-1/2 w-[590px] z-40 flex flex-col gap-3 font-mono">
-        {/* CONTAINER STACK (360px HEIGHT) */}
         <div className="relative w-full h-[360px]">
           {slides.map((slide, idx) => {
             const stackIndex = (idx - currentSlide + slides.length) % slides.length;
@@ -366,7 +371,6 @@ const Kita = ({ onBack }: KitaProps) => {
                   clipPath: `polygon(16px 0%, calc(100% - 16px) 0%, 100% 16px, 100% calc(100% - 16px), calc(100% - 16px) 100%, 16px 100%, 0% calc(100% - 16px), 0% 16px)`,
                 }}
               >
-                {/* Tekstur kertas antik & notch bulat */}
                 <div
                   className="absolute inset-0 pointer-events-none opacity-20 mix-blend-multiply z-30"
                   style={{
@@ -374,12 +378,10 @@ const Kita = ({ onBack }: KitaProps) => {
                   }}
                 />
                 
-                {/* Notch atas & garis putus-putus */}
                 <div className="absolute -top-3.5 left-[370px] w-6 h-6 bg-[#121212] rounded-full z-40 border border-black" />
                 <div className="absolute -bottom-3.5 left-[370px] w-6 h-6 bg-[#121212] rounded-full z-40 border border-black" />
                 <div className="absolute top-0 bottom-0 left-[381px] border-l-2 border-dashed border-black/70 z-30" />
 
-                {/* --- IKON GUNTING "TUING-TUING" & TRIGGER DRAG DI BAGIAN ATAS --- */}
                 {isTop && (
                   <div
                     onPointerDown={handlePointerDown}
@@ -389,7 +391,6 @@ const Kita = ({ onBack }: KitaProps) => {
                     className="absolute top-3 left-[365px] w-8 h-24 z-50 cursor-ns-resize group flex flex-col items-center"
                     title="Tarik gunting ini ke bawah untuk menyobek tiket!"
                   >
-                    {/* Visual Gunting Animasi Mantul & Tuing-Tuing */}
                     <div
                       ref={scissorsRef}
                       className="mt-2 w-7 h-7 rounded-full text-black flex items-center justify-center transition-transform origin-center"
@@ -399,10 +400,8 @@ const Kita = ({ onBack }: KitaProps) => {
                   </div>
                 )}
 
-                {/* SISI KIRI (INFO UTAMA TIKET) */}
                 <div className="w-[375px] pr-5 flex flex-col justify-between relative z-10">
                   <div>
-                    {/* Header Badge & Title */}
                     <div className="flex justify-between items-start border-b-2 border-black pb-2 mb-3">
                       <div>
                         <div className="flex items-center gap-1.5">
@@ -425,11 +424,9 @@ const Kita = ({ onBack }: KitaProps) => {
                       </div>
                     </div>
 
-                    {/* Dynamic Content */}
                     <div className="py-1">{slide.content}</div>
                   </div>
 
-                  {/* Sub-footer Tiket & Barcode */}
                   <div className="pt-2 border-t border-dashed border-black/40 flex justify-between items-end text-[8px] text-black/60 font-bold uppercase">
                     <div>
                       <p className="text-black/50">EVENT PASS / JAKARTA 2026</p>
@@ -450,7 +447,6 @@ const Kita = ({ onBack }: KitaProps) => {
                   </div>
                 </div>
 
-                {/* SISI KANAN (POTONGAN STUB TIKET) */}
                 <div
                   className="stub-tear-target w-[170px] pl-4 flex flex-col justify-between items-end relative z-10"
                   style={{
@@ -458,7 +454,6 @@ const Kita = ({ onBack }: KitaProps) => {
                     transition: isDragging ? 'none' : 'transform 0.3s cubic-bezier(0.16, 1, 0.3, 1)',
                   }}
                 >
-                  {/* Stempel Lingkaran Kessoku */}
                   <div className="w-full flex justify-center mt-0.5">
                     <div className="relative border-2 border-black rounded-full px-2 py-0.5 -rotate-6 flex items-center justify-center bg-white shadow-xs">
                       <span className="font-extrabold text-[10px] tracking-tighter text-black">結束バンド</span>
@@ -466,7 +461,6 @@ const Kita = ({ onBack }: KitaProps) => {
                     </div>
                   </div>
 
-                  {/* Frame Polaroid / Photo Slot */}
                   <div className="w-full h-[200px] bg-white border-2 border-black p-1 flex flex-col justify-between shadow-xs">
                     <div className="w-full h-[155px] bg-black/5 border border-black/20 overflow-hidden relative">
                       <img
@@ -485,7 +479,6 @@ const Kita = ({ onBack }: KitaProps) => {
                     </div>
                   </div>
 
-                  {/* Visual Barcode Stub Bawah */}
                   <div className="w-full h-7 flex justify-between items-center px-0.5">
                     {Array.from({ length: 18 }).map((_, i) => (
                       <div
@@ -505,7 +498,6 @@ const Kita = ({ onBack }: KitaProps) => {
 
       {/* --- DECORATIVE COLLAGE ELEMENTS ON THE LEFT SIDE --- */}
       <div className="absolute top-100 left-100 -translate-x-1/2 -translate-y-1/2 w-[550px] h-[650px]">
-        {/* Dust Particles */}
         <div className="absolute -inset-40 pointer-events-none z-50 mix-blend-screen opacity-40">
           {Array.from({ length: 14 }).map((_, i) => {
             const size = 2 + (i % 4);
@@ -521,7 +513,6 @@ const Kita = ({ onBack }: KitaProps) => {
           })}
         </div>
 
-        {/* Boarding Pass Stub */}
         <div className="absolute top-10 -right-24 w-[210px] h-[480px] bg-white text-black rotate-[12deg] shadow-[0_20px_40px_rgba(0,0,0,0.8)] z-10 rounded-xs overflow-hidden border border-black/10 flex flex-col justify-between font-mono">
           <div
             className="absolute inset-0 pointer-events-none opacity-15 mix-blend-multiply z-20"
@@ -611,7 +602,6 @@ const Kita = ({ onBack }: KitaProps) => {
           </div>
         </div>
 
-        {/* CD Album Component */}
         <div className="absolute top-[450px] left-[300px] w-[290px] h-[290px] rounded-full z-[15] shadow-[0_20px_40px_rgba(0,0,0,0.85)] border border-white/20 overflow-hidden flex items-center justify-center">
           <img
             src="img/kita/album.webp"
@@ -639,10 +629,8 @@ const Kita = ({ onBack }: KitaProps) => {
           </div>
         </div>
 
-        {/* Photocard Component */}
         <Photocard imgSrc={kitaImgSrc} />
 
-        {/* Bottom Ticket Decorative Overlay */}
         <div
           className="absolute bottom-[0px] left-[0px] w-[500px] h-[160px] bg-white text-black font-sans shadow-[0_30px_60px_rgba(0,0,0,0.85)] flex border border-black/15 select-none z-30 rotate-12"
           style={{

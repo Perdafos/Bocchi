@@ -743,12 +743,21 @@ const Scene = ({ onCharacter }: SceneProps) => {
                   ))}
                 </div>
 
-                {/* TOMBOL MORE / SELENGKAPNYA */}
+                {/* TOMBOL MORE / SELENGKAPNYA DENGAN TRANSISI ANIMASI KELUAR */}
                 {activeChar && (
                   <button
                     onClick={() => {
                       if (onCharacter) {
-                        onCharacter(activeChar.name.toLowerCase());
+                        gsap.to(sceneRef.current, {
+                          scale: 2.5,
+                          opacity: 0,
+                          filter: 'blur(10px)',
+                          duration: 0.5,
+                          ease: 'power3.in',
+                          onComplete: () => {
+                            onCharacter(activeChar.name.toLowerCase());
+                          },
+                        });
                       }
                     }}
                     title="Lihat Detail Karakter"
@@ -789,4 +798,4 @@ const Scene = ({ onCharacter }: SceneProps) => {
   );
 };
 
-export default Scene; 
+export default Scene;
