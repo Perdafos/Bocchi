@@ -4,7 +4,7 @@ import Scene from './Scene';
 import Home from './Home';
 import Seika from './characters/Seika';
 import Kikuri from './characters/Kikuri';
-import Hitori from './characters/Hitori';
+import Hitori from './characters/Bocchi';
 import Nijika from './characters/Nijika';
 import Ryo from './characters/Ryo';
 import Kita from './characters/Kita';

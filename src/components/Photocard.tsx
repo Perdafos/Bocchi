@@ -33,7 +33,15 @@ interface PhotocardProps {
   title?: string;
   number?: string;
   subtitle?: string;
+  size?: 'sm' | 'md' | 'lg';
+  photoScale?: number;
 }
+
+const sizeMap = {
+  sm: 'w-[260px] h-[340px]',
+  md: 'w-[400px] h-[520px]',
+  lg: 'w-[520px] h-[680px]',
+};
 
 const Photocard = ({
   className = '',
@@ -41,6 +49,8 @@ const Photocard = ({
   title = 'Ikuyo<br />Kita',
   number = '02',
   subtitle = 'KESSOKU BAND',
+  size = 'md',
+  photoScale = 250,
 }: PhotocardProps) => {
   const ref = useRef<HTMLDivElement>(null);
 
@@ -52,7 +62,7 @@ const Photocard = ({
   return (
     <div
       ref={ref}
-      className={`w-[400px] h-[520px] bg-white p-4 -rotate-6 shadow-[0_25px_50px_-12px_rgba(0,0,0,0.85)] overflow-hidden rounded-xs ${className}`}
+      className={`${sizeMap[size]} bg-white p-4 -rotate-6 shadow-[0_25px_50px_-12px_rgba(0,0,0,0.85)] overflow-hidden rounded-xs ${className}`}
     >
       {/* TEKSTUR KERTAS | image-texture.jpg overlay */}
       <div
@@ -143,15 +153,16 @@ const Photocard = ({
               style={{ transform: panel.transform, filter: panel.filter }}
             >
               <img
-                className="absolute w-full h-full object-contain object-left translate-x-3 -translate-y-5 opacity-40 scale-300"
+                className="absolute w-full h-full object-contain object-left translate-x-3 -translate-y-5 opacity-40"
                 src={imgSrc}
                 alt="Shadow"
-                style={{ filter: 'brightness(0.3) grayscale(100) opacity(0.5) blur(2px)' }}
+                style={{ filter: 'brightness(0.3) grayscale(100) opacity(0.5) blur(2px)', transform: `translateX(12px) translateY(-20px) scale(${photoScale})` }}
               />
               <img
-                className="absolute w-full h-full object-contain object-left translate-y-4 -translate-x-5 filter contrast-105 scale-250"
+                className="absolute w-full h-full object-contain object-left translate-y-4 -translate-x-5"
                 src={imgSrc}
                 alt="Main"
+                style={{ transform: `translateY(16px) translateX(-20px) scale(${photoScale * 0.833})`, filter: 'contrast(1.05)' }}
               />
             </div>
           </div>

@@ -1,16 +1,16 @@
 import { useEffect, useRef, useState } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { MoveDown, User, Sparkles, Building, Mail, Scissors, ArrowLeft } from 'lucide-react';
+import { MoveDown, User, Sparkles, Guitar, Mail, Scissors, ArrowLeft } from 'lucide-react';
 import Photocard from '../../components/Photocard';
 
 gsap.registerPlugin(ScrollTrigger);
 
-interface SeikaProps {
+interface BocchiProps {
   onBack?: () => void;
 }
 
-const Seika = ({ onBack }: SeikaProps) => {
+const Bocchi = ({ onBack }: BocchiProps) => {
   const sectionRef = useRef<HTMLDivElement>(null);
   const ticketRefs = useRef<(HTMLDivElement | null)[]>([]);
   const scissorsRef = useRef<HTMLDivElement>(null);
@@ -33,16 +33,16 @@ const Seika = ({ onBack }: SeikaProps) => {
       content: (
         <div className="space-y-2.5 text-xs leading-relaxed text-black font-mono">
           <p className="font-semibold">
-            Tch... Don't make a fuss. I’m Seika Ijichi, Nijika’s older sister and the manager of <span className="bg-[#f97316] text-white px-1 font-bold">STARRY!</span>
+            Um... h-hello... I’m Hitori Gotoh, but everyone usually calls me <span className="bg-[#ec4899] text-white px-1 font-bold">Bocchi!</span>
           </p>
           <p className="text-black/80">
-            I might look strict and rough around the edges, but I actually care about these kids and their music. Running a live house in Shimokitazawa isn't easy, but keeping STARRY alive—and making sure Nijika's band finds their place—is what I do best.
+            I’m the lead guitarist of Kessoku Band. I spend most of my days practicing guitar in my closet and dreaming of becoming popular, even though my social anxiety turns me into dust whenever people look at me. But playing music with everyone helps me feel alive!
           </p>
         </div>
       ),
-      photo: 'img/seiki/aboutme.jpg',
-      caption: 'STARRY MANAGER',
-      seat: '02S',
+      photo: 'img/hitori/aboutme.jpg',
+      caption: 'GUITAR HERO',
+      seat: '01B',
     },
     {
       id: 'funfact',
@@ -51,44 +51,44 @@ const Seika = ({ onBack }: SeikaProps) => {
       icon: <Sparkles className="w-4 h-4 text-black" />,
       content: (
         <ul className="space-y-2 text-xs font-mono text-black list-disc list-inside">
-          <li>Secretly soft-hearted and a massive tsundere when it comes to helping Kessoku Band.</li>
-          <li>A former member of a legendary indie band back in her younger days.</li>
-          <li>Expert at running soundboards, managing business, and scaring bad promoters away.</li>
-          <li>Often pretends to be annoyed by Nijika, but deeply cares about her happiness.</li>
+          <li>Literally disintegrates, glitches, or turns into ash when experiencing extreme panic.</li>
+          <li>Famous online as the guitar virtuoso "GuitarHero" with millions of views.</li>
+          <li>Wears a pink tracksuit almost all the time because it feels safe.</li>
+          <li>Secretly writes all of Kessoku Band's deep and emotional lyrics.</li>
         </ul>
       ),
-      photo: 'img/seiki/funfact.jpg',
-      caption: 'FORMER MUSICIAN',
-      seat: '02M',
+      photo: 'img/hitori/funfact.jpg',
+      caption: 'SOCIAL ANXIETY',
+      seat: '01F',
     },
     {
       id: 'equipment',
-      title: 'VENUE GEAR',
+      title: 'EQUIPMENT',
       category: 'GEAR LOG',
-      icon: <Building className="w-4 h-4 text-black" />,
+      icon: <Guitar className="w-4 h-4 text-black" />,
       content: (
         <div className="grid grid-cols-2 gap-2 text-[10px] font-mono text-black">
           <div className="bg-black/5 p-2 border border-black/25">
-            <p className="font-bold text-black uppercase">SOUND SYSTEM</p>
-            <p className="text-black/70">Pro PA Mixing Console</p>
+            <p className="font-bold text-black uppercase">MAIN GUITAR</p>
+            <p className="text-black/70">Gibson Les Paul Custom</p>
           </div>
           <div className="bg-[#121212]/5 p-2 border border-black/25">
-            <p className="font-bold text-black uppercase">STORY</p>
-            <p className="text-black/70">Built STARRY for Live Music</p>
+            <p className="font-bold text-black uppercase">INTERFACE</p>
+            <p className="text-black/70">Yamaha THR10II Desktop Amp</p>
           </div>
           <div className="bg-black/5 p-2 border border-black/25">
-            <p className="font-bold text-black uppercase">ROLE</p>
-            <p className="text-black/70">Owner & Sound Engineer</p>
+            <p className="font-bold text-black uppercase">PC SETUP</p>
+            <p className="text-black/70">DAW for GuitarHero Uploads</p>
           </div>
           <div className="bg-black/5 p-2 border border-black/25">
-            <p className="font-bold text-black uppercase">LOCATION</p>
-            <p className="text-black/70">Shimokitazawa, Tokyo</p>
+            <p className="font-bold text-black uppercase">BACKPACK</p>
+            <p className="text-black/70">Emergency Survival Kit</p>
           </div>
         </div>
       ),
-      photo: 'img/seiki/gear.jpg',
-      caption: 'STARRY CONSOLE',
-      seat: '02V',
+      photo: 'img/hitori/gear.jpg',
+      caption: 'STAGE RIG',
+      seat: '01G',
     },
     {
       id: 'contact',
@@ -97,22 +97,22 @@ const Seika = ({ onBack }: SeikaProps) => {
       icon: <Mail className="w-4 h-4 text-black" />,
       content: (
         <div className="space-y-2 text-xs font-mono text-black">
-          <p className="text-[10px] text-black/60 font-bold uppercase">// LIVEHOUSE STARRY BOOKINGS</p>
-          <div className="space-y-1.5 border-l-2 border-[#f97316] pl-3">
+          <p className="text-[10px] text-black/60 font-bold uppercase">// ONLINE INQUIRIES & CLOSET</p>
+          <div className="space-y-1.5 border-l-2 border-[#ec4899] pl-3">
             <div>
               <span className="font-bold uppercase text-black/50 text-[9px] block">LOCATION</span>
-              <span className="text-black font-bold">Shimokitazawa STARRY, Tokyo</span>
+              <span className="text-black font-bold">Inside my Closet, Tokyo, JP</span>
             </div>
             <div>
               <span className="font-bold uppercase text-black/50 text-[9px] block">AFFILIATION</span>
-              <span className="text-black font-bold">STARRY Live House</span>
+              <span className="text-black font-bold">Kessoku Band / GuitarHero</span>
             </div>
           </div>
         </div>
       ),
-      photo: 'img/seiki/contactme.jpg',
-      caption: 'STARRY ENTRANCE',
-      seat: '02E',
+      photo: 'img/hitori/contactme.jpg',
+      caption: 'CLOSET STUDIO',
+      seat: '01H',
     },
   ];
 
@@ -233,7 +233,7 @@ const Seika = ({ onBack }: SeikaProps) => {
 
   const totalColumns = 12;
   const wordRepeats = Array.from({ length: 16 });
-  const seikaImgSrc = 'img/seiki/photocard.png';
+  const bocchiImgSrc = 'img/hitori/photocard.png';
 
   return (
     <div
@@ -261,10 +261,10 @@ const Seika = ({ onBack }: SeikaProps) => {
             >
               <h1 className="text-7xl font-black tracking-tighter uppercase leading-none flex gap-2 whitespace-nowrap">
                 {wordRepeats.map((_, wordIdx) => {
-                  const isOrange = (colIdx + wordIdx) % 2 === 0;
-                  const word = (wordIdx + (isOddCol ? 1 : 0)) % 2 === 0 ? 'STARRY' : 'MANAGER';
+                  const isPink = (colIdx + wordIdx) % 2 === 0;
+                  const word = (wordIdx + (isOddCol ? 1 : 0)) % 2 === 0 ? 'KESSOKU' : 'BAND';
                   return (
-                    <span key={wordIdx} className={isOrange ? 'text-[#ea580c]' : 'text-[#808080]'}>
+                    <span key={wordIdx} className={isPink ? 'text-[#db2777]' : 'text-[#808080]'}>
                       {word}
                     </span>
                   );
@@ -287,7 +287,7 @@ const Seika = ({ onBack }: SeikaProps) => {
           className="absolute -top-[50%] -left-[30%] w-[180%] h-[240%] mix-blend-screen opacity-65"
           style={{
             background:
-              'linear-gradient(105deg, transparent 30%, rgba(254,215,170,0.45) 42%, rgba(255,247,237,0.85) 50%, rgba(254,215,170,0.45) 58%, transparent 70%)',
+              'linear-gradient(105deg, transparent 30%, rgba(251,207,232,0.45) 42%, rgba(253,242,248,0.85) 50%, rgba(251,207,232,0.45) 58%, transparent 70%)',
             transform: 'rotate(-22deg)',
             filter: 'blur(12px)',
           }}
@@ -304,7 +304,7 @@ const Seika = ({ onBack }: SeikaProps) => {
           className="absolute top-0 right-1/4 w-[600px] h-[600px] mix-blend-screen opacity-75"
           style={{
             background:
-              'radial-gradient(circle, rgba(255,247,237,0.8) 0%, rgba(254,215,170,0.3) 40%, transparent 70%)',
+              'radial-gradient(circle, rgba(253,242,248,0.8) 0%, rgba(251,207,232,0.3) 40%, transparent 70%)',
             filter: 'blur(40px)',
           }}
         />
@@ -314,8 +314,8 @@ const Seika = ({ onBack }: SeikaProps) => {
       <div className="relative z-60 h-full flex flex-col justify-between p-8 text-white font-medium text-sm tracking-tight pointer-events-none">
         <div className="w-full grid grid-cols-3 items-start">
           <div className="leading-tight">
-            <p className="font-bold">Livehouse</p>
-            <p>Starry</p>
+            <p className="font-bold">Kessoku</p>
+            <p>Band</p>
           </div>
           <div className="text-center leading-tight">
             <p>Design by</p>
@@ -329,18 +329,18 @@ const Seika = ({ onBack }: SeikaProps) => {
 
         <div className="w-full flex justify-between items-end">
           <div className="leading-tight">
-            <p className="font-bold">Check out</p>
-            <p>the venue?!!</p>
+            <p className="font-bold">They're</p>
+            <p>go to concert?!!</p>
           </div>
           <button
             onClick={onBack}
-            className="flex items-center gap-1.5 px-3 py-1.5 bg-[#f97316] text-white font-mono font-bold text-xs border-2 border-white shadow-[3px_3px_0px_#fff] hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-[1px_1px_0px_#fff] transition-all cursor-pointer uppercase pointer-events-auto"
+            className="flex items-center gap-1.5 px-3 py-1.5 bg-[#ec4899] text-white font-mono font-bold text-xs border-2 border-white shadow-[3px_3px_0px_#fff] hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-[1px_1px_0px_#fff] transition-all cursor-pointer uppercase pointer-events-auto"
           >
             <ArrowLeft className="w-4 h-4" /> BACK
           </button>
           <div className="text-right leading-tight">
-            <p className="font-bold">let's manage</p>
-            <p>the show</p>
+            <p className="font-bold">let's buy</p>
+            <p>the tickets</p>
           </div>
         </div>
       </div>
@@ -414,7 +414,7 @@ const Seika = ({ onBack }: SeikaProps) => {
                         </p>
                       </div>
                       <div className="flex flex-col items-end">
-                        <span className="bg-[#f97316] text-white text-[9px] font-black px-1.5 py-0.5 uppercase tracking-wider">
+                        <span className="bg-[#ec4899] text-white text-[9px] font-black px-1.5 py-0.5 uppercase tracking-wider">
                           PASS NO. 0{idx + 1}
                         </span>
                         <span className="text-[8px] font-bold text-black/50 uppercase mt-0.5">
@@ -428,19 +428,19 @@ const Seika = ({ onBack }: SeikaProps) => {
 
                   <div className="pt-2 border-t border-dashed border-black/40 flex justify-between items-end text-[8px] text-black/60 font-bold uppercase">
                     <div>
-                      <p className="text-black/50">STARRY PASS / TOKYO 2026</p>
-                      <p className="text-[10px] text-black font-extrabold leading-tight">LIVEHOUSE STARRY</p>
+                      <p className="text-black/50">EVENT PASS / JAKARTA 2026</p>
+                      <p className="text-[10px] text-black font-extrabold leading-tight">KESSOKU BAND TOUR</p>
                     </div>
 
                     <div className="w-16 h-5 overflow-hidden opacity-80">
                       <svg className="w-full h-full" viewBox="0 0 100 200" preserveAspectRatio="none">
-                        <pattern id={`fine-barcode-seika-${idx}`} width="100%" height="10" patternUnits="userSpaceOnUse">
+                        <pattern id={`fine-barcode-bocchi-${idx}`} width="100%" height="10" patternUnits="userSpaceOnUse">
                           <rect x="0" y="0" width="100%" height="2" fill="black" />
                           <rect x="0" y="3" width="100%" height="1" fill="black" />
                           <rect x="0" y="5" width="100%" height="2.5" fill="black" />
                           <rect x="0" y="8" width="100%" height="1" fill="black" />
                         </pattern>
-                        <rect width="100%" height="100%" fill={`url(#fine-barcode-seika-${idx})`} />
+                        <rect width="100%" height="100%" fill={`url(#fine-barcode-bocchi-${idx})`} />
                       </svg>
                     </div>
                   </div>
@@ -455,7 +455,7 @@ const Seika = ({ onBack }: SeikaProps) => {
                 >
                   <div className="w-full flex justify-center mt-0.5">
                     <div className="relative border-2 border-black rounded-full px-2 py-0.5 -rotate-6 flex items-center justify-center bg-white shadow-xs">
-                      <span className="font-extrabold text-[10px] tracking-tighter text-black">スターリー</span>
+                      <span className="font-extrabold text-[10px] tracking-tighter text-black">結束バンド</span>
                       <div className="absolute inset-0 border border-black rounded-full scale-105 rotate-6 pointer-events-none" />
                     </div>
                   </div>
@@ -472,8 +472,8 @@ const Seika = ({ onBack }: SeikaProps) => {
                       <p className="text-[8.5px] font-black uppercase text-black leading-none tracking-tighter">
                         {slide.caption}
                       </p>
-                      <p className="text-[7.5px] font-extrabold text-[#ea580c] tracking-widest mt-0.5">
-                        SEIKA IJICHI
+                      <p className="text-[7.5px] font-extrabold text-[#db2777] tracking-widest mt-0.5">
+                        HITORI GOTOH
                       </p>
                     </div>
                   </div>
@@ -505,7 +505,7 @@ const Seika = ({ onBack }: SeikaProps) => {
             return (
               <div
                 key={i}
-                className="absolute rounded-full bg-[#FFEDD5]"
+                className="absolute rounded-full bg-[#FCE7F3]"
                 style={{ width: size, height: size, top: `${top}%`, left: `${left}%`, filter: 'blur(1px)' }}
               />
             );
@@ -525,7 +525,7 @@ const Seika = ({ onBack }: SeikaProps) => {
             <div className="flex flex-col justify-between items-start border-t pt-2 border-black/20 w-full">
               <div className="text-[9px] font-bold tracking-tighter">
                 <p className="uppercase text-black/60">Passenger</p>
-                <p className="text-[11px]">SEIKA IJICHI</p>
+                <p className="text-[11px]">HITORI GOTOH</p>
               </div>
               <div className="text-[9px] font-bold tracking-tighter">
                 <p className="uppercase text-black/60">Flight</p>
@@ -538,13 +538,13 @@ const Seika = ({ onBack }: SeikaProps) => {
               </div>
               <div className="w-8 h-24 bg-transparent overflow-hidden">
                 <svg className="w-full h-full" viewBox="0 0 100 200" preserveAspectRatio="none">
-                  <pattern id="fine-barcode-horizontal-seika" width="100%" height="8" patternUnits="userSpaceOnUse">
+                  <pattern id="fine-barcode-horizontal-bocchi" width="100%" height="8" patternUnits="userSpaceOnUse">
                     <rect x="0" y="0" width="100%" height="1" fill="black" />
                     <rect x="0" y="2" width="100%" height="0.5" fill="black" />
                     <rect x="0" y="3.5" width="100%" height="1.5" fill="black" />
                     <rect x="0" y="6" width="100%" height="0.75" fill="black" />
                   </pattern>
-                  <rect width="100%" height="100%" fill="url(#fine-barcode-horizontal-seika)" />
+                  <rect width="100%" height="100%" fill="url(#fine-barcode-horizontal-bocchi)" />
                 </svg>
               </div>
             </div>
@@ -585,7 +585,7 @@ const Seika = ({ onBack }: SeikaProps) => {
               </div>
             </div>
           </div>
-          <div className="bg-[#f97316] z-30">
+          <div className="bg-[#ec4899] z-30">
             <div className="pt-4 px-1">
               <div className="h-8 w-full flex justify-between p-[2px] mb-2">
                 {Array.from({ length: 32 }).map((_, i) => (
@@ -605,8 +605,8 @@ const Seika = ({ onBack }: SeikaProps) => {
         {/* 2. Piringan CD Album */}
         <div className="absolute top-[450px] left-[300px] w-[290px] h-[290px] rounded-full z-[15] shadow-[0_20px_40px_rgba(0,0,0,0.85)] border border-white/20 overflow-hidden flex items-center justify-center">
           <img
-            src="img/seiki/album.jpg"
-            alt="STARRY Live CD"
+            src="img/hitori/album.png"
+            alt="Kessoku Band CD"
             className="absolute inset-0 w-full h-full object-cover filter brightness-[0.9] contrast-[1.05]"
             style={{ transform: 'scaleX(-1)' }}
           />
@@ -631,7 +631,7 @@ const Seika = ({ onBack }: SeikaProps) => {
         </div>
 
         {/* 3. Photocard */}
-        <Photocard imgSrc={seikaImgSrc} photoScale={1.3} />
+        <Photocard imgSrc={bocchiImgSrc} photoScale={1.3}/>
 
         {/* 4. Tiket Konser Besar (Kiri Bawah) */}
         <div
@@ -653,20 +653,20 @@ const Seika = ({ onBack }: SeikaProps) => {
           <div className="w-[325px] p-5 flex items-stretch justify-between relative z-10">
             <div className="relative border-[4px] border-black p-2 pr-3 flex flex-col justify-between w-[185px] bg-[#fff] shadow-xs">
               <span
-                className="absolute top-7 left-1 text-[#f97316] font-black text-xl tracking-tighter z-20 -rotate-6 whitespace-nowrap"
+                className="absolute top-7 left-1 text-[#ec4899] font-black text-xl tracking-tighter z-20 -rotate-6 whitespace-nowrap"
                 style={{
                   textShadow:
                     '1px 1px 0px #fff, -1px -1px 0px #fff, 1px -1px 0px #fff, -1px 1px 0px #fff',
                 }}
               >
-                ライブハウス
+                ぼっち・ざ・ろっく!
               </span>
               <h1 className="text-4xl font-black tracking-tighter uppercase leading-[0.82] text-black">
-                STARRY<br />VENUE
+                KESSOKU<br />BAND
               </h1>
               <div className="flex items-center gap-1 mt-1">
                 <span className="h-[2px] w-3 bg-black"></span>
-                <span className="text-[10px] font-black tracking-widest uppercase">LIVEHOUSE PASS</span>
+                <span className="text-[10px] font-black tracking-widest uppercase">WORLD TOUR</span>
                 <span className="h-[2px] w-full bg-black"></span>
               </div>
             </div>
@@ -697,7 +697,7 @@ const Seika = ({ onBack }: SeikaProps) => {
           <div className="w-[175px] p-4 flex flex-col justify-between items-end relative z-10 pl-6">
             <div className="w-full flex justify-center mt-1">
               <div className="relative border-2 border-black rounded-full px-2 py-0.5 -rotate-12 flex items-center justify-center">
-                <span className="font-extrabold text-[11px] tracking-tighter text-black">スターリー</span>
+                <span className="font-extrabold text-[11px] tracking-tighter text-black">結束バンド</span>
                 <div className="absolute inset-0 border border-black rounded-full scale-105 rotate-6 pointer-events-none" />
               </div>
             </div>
@@ -729,4 +729,4 @@ const Seika = ({ onBack }: SeikaProps) => {
   );
 };
 
-export default Seika;
+export default Bocchi;
