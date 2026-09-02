@@ -629,7 +629,7 @@ const Kita = ({ onBack }: KitaProps) => {
           </div>
         </div>
 
-        <Photocard imgSrc={kitaImgSrc} />
+        <Photocard imgSrc={kitaImgSrc} photoScale={3}/>
 
         <div
           className="absolute bottom-[0px] left-[0px] w-[500px] h-[160px] bg-white text-black font-sans shadow-[0_30px_60px_rgba(0,0,0,0.85)] flex border border-black/15 select-none z-30 rotate-12"
