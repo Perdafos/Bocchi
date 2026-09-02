@@ -5,7 +5,6 @@ import Lenis from '@studio-freight/lenis';
 
 gsap.registerPlugin(ScrollTrigger);
 
-
 const characters = [
   {
     name: 'Seika',
@@ -14,9 +13,12 @@ const characters = [
     ty: -80,
     w: 'w-20',
     dialog: 'Ada apa ini...?',
-    align: 'left',
-    bubbleWidth: 'w-36',
     z: 10,
+    color: '#e65100',
+    accentColor: '#fbbf24',
+    role: 'MANAGER',
+    jpName: '伊地知 星歌',
+    noiseLevel: 'LOW',
   },
   {
     name: 'Kikuri',
@@ -25,9 +27,12 @@ const characters = [
     ty: -80,
     w: 'w-32',
     dialog: 'Minum dulu gak sih~',
-    align: 'left',
-    bubbleWidth: 'w-44',
     z: 3,
+    color: '#9c27b0',
+    accentColor: '#a3e635',
+    role: 'BASSIST / SICK HACK',
+    jpName: '廣井 きくり',
+    noiseLevel: 'HIGH',
   },
   {
     name: 'Hitori',
@@ -36,9 +41,12 @@ const characters = [
     ty: -72,
     w: 'w-39',
     dialog: 'A-Awas, j-jangan terlalu dekat!!',
-    align: 'right',
-    bubbleWidth: 'w-52',
     z: 10,
+    color: '#ec4899',
+    accentColor: '#22d3ee',
+    role: 'GUITARIST',
+    jpName: '後藤 ひとり',
+    noiseLevel: 'UNKNOWN',
   },
   {
     name: 'Nijika',
@@ -47,9 +55,12 @@ const characters = [
     ty: -98,
     w: 'w-48',
     dialog: 'Semuanya, ayo latihan!',
-    align: 'left',
-    bubbleWidth: 'w-44',
     z: 3,
+    color: '#eab308',
+    accentColor: '#ef4444',
+    role: 'DRUMMER / LEADER',
+    jpName: '伊地知 虹夏',
+    noiseLevel: 'MEDIUM',
   },
   {
     name: 'Ryo',
@@ -58,9 +69,12 @@ const characters = [
     ty: -96,
     w: 'w-84',
     dialog: 'Pinjam uang dong...',
-    align: 'right',
-    bubbleWidth: 'w-40',
     z: 10,
+    color: '#3b82f6',
+    accentColor: '#f43f5e',
+    role: 'BASSIST',
+    jpName: '山田 リョウ',
+    noiseLevel: 'LOW',
   },
   {
     name: 'Kita',
@@ -69,69 +83,125 @@ const characters = [
     ty: -80,
     w: 'w-74',
     dialog: 'Kita-aan~',
-    align: 'left',
-    bubbleWidth: 'w-36',
     z: 10,
+    color: '#ef4444',
+    accentColor: '#4ade80',
+    role: 'VOCAL & GUITARIST',
+    jpName: '喜多 郁代',
+    noiseLevel: 'MAX',
   },
 ];
 
-// ============================================================
-// CAMERA TARGETS
-// ============================================================
-
 const cameraTargets = [
-  { scale: 4, x: 160, y: 320, scroll: 400 },
-  { scale: 5, x: -420, y: 240, scroll: 1200 },
-  { scale: 4, x: 680, y: 144, scroll: 2000 },
-  { scale: 3, x: -480, y: -14, scroll: 2800 },
-  { scale: 2, x: 580, y: 20, scroll: 3600 },
-  { scale: 2.6, x: -950, y: -200, scroll: 4400 },
+  { scale: 3.2, x: 120, y: 240, scroll: 400 },    // 0: Seika
+  { scale: 3.5, x: -280, y: 100, scroll: 1200 },  // 1: Kikuri
+  { scale: 3.2, x: 380, y: -100, scroll: 2000 },  // 2: Hitori
+  { scale: 2.8, x: -420, y: 0, scroll: 2800 },    // 3: Nijika
+  { scale: 2.2, x: 660, y: -160, scroll: 3600 },  // 4: Ryo
+  { scale: 2.4, x: -1000, y: -280, scroll: 4400 }, // 5: Kita
 ];
 
 const Scene = () => {
   const [mouseX, setMouseX] = useState<number | null>(null);
-  const [isZoomed, setIsZoomed] = useState<boolean>(false);
+  const [, setIsZoomed] = useState<boolean>(false);
+  const [activeCharIndex, setActiveCharIndex] = useState<number | null>(null);
 
   const sceneRef = useRef<HTMLDivElement>(null);
   const wrapperRef = useRef<HTMLDivElement>(null);
   const overlayRef = useRef<HTMLDivElement>(null);
   const charWrapperRefs = useRef<(HTMLDivElement | null)[]>([]);
   const imgRefs = useRef<(HTMLImageElement | null)[]>([]);
-  const bubbleRefs = useRef<(HTMLDivElement | null)[]>([]);
-  const lenisRef = useRef<Lenis | null>(null);
+  const dialogBoxRef = useRef<HTMLDivElement>(null);
+  const splashContainerRef = useRef<HTMLDivElement>(null);
+  const speedLinesRef = useRef<HTMLDivElement>(null);
+  const flashOverlayRef = useRef<HTMLDivElement>(null);
+  const letterboxTopRef = useRef<HTMLDivElement>(null);
+  const letterboxBottomRef = useRef<HTMLDivElement>(null);
 
+  const lenisRef = useRef<Lenis | null>(null);
   const cameraModeRef = useRef<'linear' | 'free'>('linear');
   const scrollTriggerRef = useRef<ScrollTrigger | null>(null);
   const cameraTweenRef = useRef<gsap.core.Timeline | null>(null);
+  const lastActiveIndexRef = useRef<number | null>(null);
 
   const handleMouseMove = useCallback((e: MouseEvent) => {
     setMouseX(e.clientX);
   }, []);
 
-  // ==========================================================
-  // UPDATE BUBBLE POSITION
-  // ==========================================================
-  const updateAllBubbles = useCallback(() => {
-    imgRefs.current.forEach((img, i) => {
-      const bubble = bubbleRefs.current[i];
-      if (!img || !bubble) return;
+  const triggerEpicEffects = useCallback(() => {
+    if (speedLinesRef.current) {
+      gsap.fromTo(
+        speedLinesRef.current,
+        { opacity: 0.85, scale: 1.2 },
+        { opacity: 0, scale: 1, duration: 0.4, ease: 'power3.out' }
+      );
+    }
 
-      const rect = img.getBoundingClientRect();
-      const align = characters[i].align;
-
-      const top = rect.top - 50 + (i === 5 ? 100 : 0);
-      const left = align === 'right' ? rect.right - 40 : rect.left - 100;
-
-      gsap.set(bubble, {
-        top: `${top}px`,
-        left: `${left}px`,
-      });
-    });
+    if (flashOverlayRef.current) {
+      gsap.fromTo(
+        flashOverlayRef.current,
+        { opacity: 0.6 },
+        { opacity: 0, duration: 0.25, ease: 'power2.out' }
+      );
+    }
   }, []);
 
-  // ==========================================================
-  // CLICK CHARACTER (DIRECT FLY TO TARGET)
-  // ==========================================================
+  const showDialog = useCallback(
+    (index: number | null) => {
+      setActiveCharIndex(index);
+      if (index !== null) {
+        triggerEpicEffects();
+
+        gsap.to([letterboxTopRef.current, letterboxBottomRef.current], {
+          height: '40px',
+          duration: 0.3,
+          ease: 'power3.out',
+        });
+
+        gsap.to(dialogBoxRef.current, {
+          opacity: 1,
+          y: 0,
+          scale: 1,
+          duration: 0.35,
+          ease: 'back.out(1.5)',
+          overwrite: true,
+        });
+
+        if (splashContainerRef.current) {
+          gsap.fromTo(
+            splashContainerRef.current.children,
+            { scale: 0.2, opacity: 0, rotation: -45 },
+            {
+              scale: 1,
+              opacity: 1,
+              rotation: 0,
+              duration: 0.45,
+              stagger: 0.04,
+              ease: 'power4.out',
+              overwrite: true,
+            }
+          );
+        }
+      } else {
+        gsap.to([letterboxTopRef.current, letterboxBottomRef.current], {
+          height: '0px',
+          duration: 0.3,
+          ease: 'power2.in',
+        });
+
+        gsap.to(dialogBoxRef.current, {
+          opacity: 0,
+          y: 20,
+          scale: 0.95,
+          duration: 0.2,
+          ease: 'power2.in',
+          overwrite: true,
+        });
+      }
+    },
+    [triggerEpicEffects]
+  );
+
   const handleCharacterClick = (index: number) => {
     const wrapper = wrapperRef.current;
     const overlay = overlayRef.current;
@@ -159,72 +229,39 @@ const Scene = () => {
       }
     });
 
-    bubbleRefs.current.forEach((bubble, idx) => {
-      if (bubble && idx !== index) {
-        gsap.to(bubble, {
-          scale: 0,
-          opacity: 0,
-          duration: 0.15,
-          ease: 'power2.in',
-          overwrite: true,
-        });
-      }
-    });
+    lastActiveIndexRef.current = index;
+    showDialog(index);
 
     gsap.to(overlay, {
-      opacity: 0.7,
-      duration: 0.35,
-      ease: 'power2.out',
+      opacity: 0.75,
+      duration: 0.45,
+      ease: 'power4.out',
       overwrite: true,
     });
 
-    const timeline = gsap.timeline({
-      defaults: { overwrite: 'auto' },
-    });
+    const timeline = gsap.timeline({ defaults: { overwrite: 'auto' } });
     cameraTweenRef.current = timeline;
 
     timeline.to(wrapper, {
       scale: target.scale,
       x: target.x,
       y: target.y,
-      duration: 1.1,
-      ease: 'power3.inOut',
-      onUpdate: updateAllBubbles,
+      duration: 0.45,
+      ease: 'power4.out',
     });
-
-    timeline.to(
-      bubbleRefs.current[index],
-      {
-        scale: 1,
-        opacity: 1,
-        duration: 0.35,
-        ease: 'back.out(1.7)',
-      },
-      '-=0.3'
-    );
 
     timeline.call(() => {
       if (!lenisRef.current) return;
-
-      lenisRef.current.scrollTo(target.scroll, {
-        duration: 0,
-        immediate: true,
-      });
-
-      cameraModeRef.current = 'linear';
-
+      lenisRef.current.scrollTo(target.scroll, { duration: 0, immediate: true });
       if (scrollTriggerRef.current) {
+        scrollTriggerRef.current.scroll(target.scroll);
         scrollTriggerRef.current.enable();
         scrollTriggerRef.current.update();
       }
-
-      updateAllBubbles();
+      cameraModeRef.current = 'linear';
     });
   };
 
-  // ==========================================================
-  // RESET CAMERA TO INITIAL POSITION
-  // ==========================================================
   const handleResetCamera = () => {
     const wrapper = wrapperRef.current;
     const overlay = overlayRef.current;
@@ -241,23 +278,10 @@ const Scene = () => {
       scrollTriggerRef.current.disable();
     }
 
-    // Sembunyikan seluruh bubble dialog
-    bubbleRefs.current.forEach((bubble) => {
-      if (bubble) {
-        gsap.to(bubble, {
-          scale: 0,
-          opacity: 0,
-          duration: 0.2,
-          ease: 'power2.in',
-          overwrite: true,
-        });
-      }
-    });
+    lastActiveIndexRef.current = null;
+    showDialog(null);
 
-    // Animasikan kamera kembali ke posisi awal (Zoom Out)
-    const timeline = gsap.timeline({
-      defaults: { overwrite: 'auto' },
-    });
+    const timeline = gsap.timeline({ defaults: { overwrite: 'auto' } });
     cameraTweenRef.current = timeline;
 
     timeline
@@ -265,47 +289,36 @@ const Scene = () => {
         scale: 1,
         x: 0,
         y: 0,
-        duration: 1,
-        ease: 'power3.inOut',
-        onUpdate: updateAllBubbles,
+        duration: 0.5,
+        ease: 'power4.inOut',
       })
       .to(
         overlay,
         {
           opacity: 0,
-          duration: 0.8,
-          ease: 'power2.inOut',
+          duration: 0.5,
+          ease: 'power4.inOut',
         },
         '<'
       );
 
     timeline.call(() => {
-      // Reset scroll posisi Lenis ke paling atas (0)
       if (lenisRef.current) {
-        lenisRef.current.scrollTo(0, {
-          duration: 0,
-          immediate: true,
-        });
+        lenisRef.current.scrollTo(0, { duration: 0, immediate: true });
       }
-
-      // Reset Z-Index seluruh karakter ke nilai awal
-      charWrapperRefs.current.forEach((el, idx) => {
-        if (el) gsap.set(el, { zIndex: characters[idx].z });
-      });
-
-      cameraModeRef.current = 'linear';
-      setIsZoomed(false);
-
       if (scrollTriggerRef.current) {
+        scrollTriggerRef.current.scroll(0);
         scrollTriggerRef.current.enable();
         scrollTriggerRef.current.update();
       }
+      charWrapperRefs.current.forEach((el, idx) => {
+        if (el) gsap.set(el, { zIndex: characters[idx].z });
+      });
+      cameraModeRef.current = 'linear';
+      setIsZoomed(false);
     });
   };
 
-  // ==========================================================
-  // MAIN EFFECT
-  // ==========================================================
   useEffect(() => {
     const lenis = new Lenis({
       duration: 1.2,
@@ -319,10 +332,11 @@ const Scene = () => {
       ScrollTrigger.update();
     });
 
-    gsap.ticker.add((time) => {
+    const updateLenis = (time: number) => {
       lenis.raf(time * 1000);
-    });
+    };
 
+    gsap.ticker.add(updateLenis);
     gsap.ticker.lagSmoothing(0);
 
     const scene = sceneRef.current;
@@ -340,38 +354,40 @@ const Scene = () => {
           trigger: scene,
           start: 'top top',
           end: `+=${seg * 7}`,
-          scrub: 0.5,
+          scrub: 0.1, // Nilai scrub lebih rendah agar tidak delay/lag saat di-scroll
           onUpdate: (self) => {
             if (cameraModeRef.current === 'free') return;
 
-            updateAllBubbles();
-
             const p = self.progress;
 
-            // Update status state isZoomed berdasarkan posisi scroll progress
-            if (p > 0.05 && p < 0.95) {
-              setIsZoomed(true);
-            } else {
-              setIsZoomed(false);
-            }
-
-            if (p <= 0 || p >= 0.95) {
-              charWrapperRefs.current.forEach((el, idx) => {
-                if (el) gsap.set(el, { zIndex: characters[idx].z });
-              });
+            if (p <= 0.05 || p >= 0.95) {
+              if (lastActiveIndexRef.current !== null) {
+                lastActiveIndexRef.current = null;
+                setIsZoomed(false);
+                showDialog(null);
+                charWrapperRefs.current.forEach((el, idx) => {
+                  if (el) gsap.set(el, { zIndex: characters[idx].z });
+                });
+              }
             } else {
               const activeIndex = Math.min(
                 totalSteps - 1,
-                Math.floor((p / 0.85) * totalSteps)
+                Math.floor(((p - 0.05) / 0.85) * totalSteps)
               );
 
-              charWrapperRefs.current.forEach((el, idx) => {
-                if (el) {
-                  gsap.set(el, {
-                    zIndex: idx === activeIndex ? 30 : characters[idx].z,
-                  });
-                }
-              });
+              if (lastActiveIndexRef.current !== activeIndex) {
+                lastActiveIndexRef.current = activeIndex;
+                setIsZoomed(true);
+                showDialog(activeIndex);
+
+                charWrapperRefs.current.forEach((el, idx) => {
+                  if (el) {
+                    gsap.set(el, {
+                      zIndex: idx === activeIndex ? 30 : characters[idx].z,
+                    });
+                  }
+                });
+              }
             }
           },
         },
@@ -382,49 +398,27 @@ const Scene = () => {
       }
 
       gsap.set(overlay, { opacity: 0 });
-      bubbleRefs.current.forEach((bubble) => {
-        if (bubble) gsap.set(bubble, { scale: 0, opacity: 0 });
-      });
+      gsap.set(dialogBoxRef.current, { opacity: 0, y: 30, scale: 0.95 });
 
       charWrapperRefs.current.forEach((charEl, idx) => {
         if (charEl) gsap.set(charEl, { zIndex: characters[idx].z });
       });
 
-      tl.to(overlay, { opacity: 0.7, ease: 'power1.inOut', duration: 0.3 }, 0);
+      tl.to(overlay, { opacity: 0.75, ease: 'power2.inOut', duration: 0.2 }, 0);
 
       cameraTargets.forEach((target, i) => {
         const stepTime = i;
-
         tl.to(
           wrapper,
           {
             scale: target.scale,
             x: target.x,
             y: target.y,
-            ease: 'power1.inOut',
-            duration: 0.5,
+            ease: 'power3.out',
+            duration: 0.45,
           },
           stepTime
-        )
-          .to(
-            bubbleRefs.current[i],
-            {
-              scale: 1,
-              opacity: 1,
-              ease: 'back.out(1.7)',
-              duration: 0.3,
-            },
-            stepTime
-          )
-          .to(
-            bubbleRefs.current[i],
-            {
-              scale: 0,
-              opacity: 0,
-              duration: 0.2,
-            },
-            stepTime + 0.8
-          );
+        );
       });
 
       tl.to(
@@ -433,16 +427,16 @@ const Scene = () => {
           scale: 1,
           x: 0,
           y: 0,
-          ease: 'power1.inOut',
-          duration: 1,
+          ease: 'power3.inOut',
+          duration: 0.6,
         },
         6
       ).to(
         overlay,
         {
           opacity: 0,
-          ease: 'power1.inOut',
-          duration: 1,
+          ease: 'power3.inOut',
+          duration: 0.6,
         },
         6
       );
@@ -472,40 +466,48 @@ const Scene = () => {
     return () => {
       window.removeEventListener('mousemove', handleMouseMove);
       window.removeEventListener('wheel', handleWheel);
+      gsap.ticker.remove(updateLenis);
       if (cameraTweenRef.current) cameraTweenRef.current.kill();
       lenis.destroy();
       ScrollTrigger.getAll().forEach((t) => t.kill());
     };
-  }, [handleMouseMove, updateAllBubbles]);
+  }, [handleMouseMove, showDialog]);
+
+  const activeChar = activeCharIndex !== null ? characters[activeCharIndex] : null;
+  const themeColor = activeChar?.color || '#ef4444';
+  const accentColor = activeChar?.accentColor || '#4ade80';
 
   return (
     <>
       <div style={{ height: 'calc(5600px + 100vh)' }} />
 
-      {/* TOMBOL RESET / KEMBALI */}
-      <button
-        onClick={handleResetCamera}
-        className={`fixed top-6 right-6 z-50 flex items-center gap-2 px-5 py-2.5 bg-black/80 hover:bg-black text-white text-sm font-bold tracking-wider rounded-full border border-white/20 shadow-lg backdrop-blur-md transition-all duration-300 transform ${
-          isZoomed
-            ? 'opacity-100 translate-y-0 pointer-events-auto'
-            : 'opacity-0 -translate-y-4 pointer-events-none'
-        }`}
-      >
-        <svg
-          className="w-4 h-4"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6"
-          />
-        </svg>
-        Kembali
-      </button>
+      {/* SCREEN FLASH IMPACT */}
+      <div
+        ref={flashOverlayRef}
+        className="fixed inset-0 z-50 pointer-events-none opacity-0 mix-blend-screen"
+        style={{ backgroundColor: accentColor }}
+      />
+
+      {/* ANIME SPEED LINES OVERLAY */}
+      <div
+        ref={speedLinesRef}
+        className="fixed inset-0 z-40 pointer-events-none opacity-0 mix-blend-overlay"
+        style={{
+          backgroundImage:
+            'repeating-radial-gradient(circle at center, transparent 0, transparent 30%, rgba(255,255,255,0.4) 31%, transparent 33%)',
+          backgroundSize: '100% 100%',
+        }}
+      />
+
+      {/* CINEMATIC LETTERBOX BARS */}
+      <div
+        ref={letterboxTopRef}
+        className="fixed top-0 left-0 right-0 z-50 bg-black h-0 pointer-events-none transition-all"
+      />
+      <div
+        ref={letterboxBottomRef}
+        className="fixed bottom-0 left-0 right-0 z-50 bg-black h-0 pointer-events-none transition-all"
+      />
 
       <div
         ref={sceneRef}
@@ -581,34 +583,184 @@ const Scene = () => {
           })}
         </div>
 
-        {/* BUBBLE CHAT */}
-        <div className="fixed inset-0 z-50 pointer-events-none">
-          {characters.map((char, i) => {
-            const isRight = char.align === 'right';
-            const tailClass = isRight
-              ? `absolute -bottom-2 left-4 w-0 h-0 border-l-[8px] border-l-transparent border-t-[10px] border-t-black border-r-[8px] border-r-transparent`
-              : `absolute -bottom-2 right-4 w-0 h-0 border-l-[8px] border-l-transparent border-t-[10px] border-t-black border-r-[8px] border-r-transparent`;
+        {/* FULL-SCREEN OVERLAY Y2K / PUNK GRAPHICS & DIALOGUE UI */}
+        <div
+          ref={dialogBoxRef}
+          className="fixed inset-0 z-50 pointer-events-none opacity-0 select-none font-sans flex flex-col justify-end p-4 sm:p-8"
+        >
+          {/* SPREADING SPLASHES & GRAPHIC SHARDS */}
+          <div
+            ref={splashContainerRef}
+            className="absolute inset-0 pointer-events-none overflow-hidden z-0"
+          >
+            {/* 1. Spiky Burst Kiri Bawah */}
+            <svg
+              viewBox="0 0 500 500"
+              className="absolute -bottom-44 -left-44 w-[400px] h-[400px] sm:w-[500px] sm:h-[500px] filter drop-shadow-[0_15px_30px_rgba(0,0,0,0.9)] opacity-75"
+            >
+              <path
+                d="M250 20 L290 140 L440 60 L350 190 L490 240 L340 280 L420 420 L280 340 L200 480 L210 330 L50 370 L150 260 L10 200 L160 190 Z"
+                fill={accentColor}
+                className="opacity-70 transition-colors duration-300"
+              />
+              <path
+                d="M250 40 L280 150 L410 80 L330 200 L460 250 L320 290 L380 400 L270 330 L190 450 L200 320 L70 350 L140 250 L30 190 L150 180 Z"
+                fill={themeColor}
+                className="transition-colors duration-300"
+              />
+              <path
+                d="M380 100 L386 125 L411 131 L386 137 L380 162 L374 137 L349 131 L374 125 Z"
+                fill="#ffffff"
+              />
+              <path
+                d="M120 120 L124 140 L144 144 L124 148 L120 168 L116 148 L96 144 L116 140 Z"
+                fill="#ffffff"
+              />
+            </svg>
 
-            return (
+            {/* 2. Sharp Speed Shards */}
+            <svg
+              viewBox="0 0 400 400"
+              className="absolute bottom-24 right-0 w-[350px] h-[350px] sm:w-[500px] sm:h-[500px]"
+            >
+              <path
+                d="M50 400 L400 0 L400 150 L180 400 Z"
+                fill={accentColor}
+                className="opacity-40 transition-colors duration-300"
+              />
+              <path
+                d="M0 400 L400 80 L400 220 L120 400 Z"
+                fill={themeColor}
+                className="opacity-80 transition-colors duration-300"
+              />
+              <path
+                d="M220 350 L380 120 L400 280 Z"
+                fill="#ffffff"
+                className="opacity-30"
+              />
+            </svg>
+
+            {/* Floating Kanji Text Raksasa */}
+            <div className="absolute left-1/2 -translate-x-1/2 top-16 pointer-events-none select-none opacity-25 font-black text-7xl md:text-9xl text-white transform -rotate-3 font-mono tracking-tighter whitespace-nowrap">
+              {activeChar?.jpName || ''}
+            </div>
+          </div>
+
+          <div className="max-w-7xl mx-auto w-full relative z-10">
+            {/* HEADER TAG NAMA + ROLE + CUTOUT BADGES */}
+            <div className="flex flex-wrap items-center gap-3 mb-[-12px] relative z-20 pl-4 sm:pl-8">
               <div
-                key={i}
-                ref={(el) => {
-                  bubbleRefs.current[i] = el;
-                }}
-                className={`fixed ${char.bubbleWidth} select-none`}
+                className="inline-flex items-center gap-4 text-white font-black text-2xl sm:text-3xl px-8 py-3 tracking-widest uppercase transform -skew-x-12 transition-all duration-300 border-4 border-black"
                 style={{
-                  transformOrigin: isRight ? 'bottom left' : 'bottom right',
+                  backgroundColor: themeColor,
+                  boxShadow: `8px 8px 0px #000000, 0 0 20px ${themeColor}aa`,
                 }}
               >
-                <div className="relative flex items-center justify-center p-3 bg-black text-white font-bold text-xs italic tracking-wider rounded-sm shadow-2xl transform -rotate-3 border-2 border-white">
-                  <span className="relative z-10 text-center leading-snug break-words">
-                    {char.dialog}
-                  </span>
-                  <div className={tailClass} />
-                </div>
+                <span className="inline-block transform skew-x-12 font-mono drop-shadow-[2px_2px_0px_#000]">
+                  {activeChar?.name || ''}
+                </span>
               </div>
-            );
-          })}
+
+              <div
+                className="inline-block text-black font-black text-xs sm:text-sm px-4 py-2 tracking-widest uppercase transform skew-x-6 border-2 border-black transition-colors duration-300 shadow-[4px_4px_0px_#000]"
+                style={{ backgroundColor: accentColor }}
+              >
+                {activeChar?.role || ''}
+              </div>
+
+              <div className="bg-yellow-400 text-black font-mono font-black text-[10px] px-3 py-1 transform -rotate-6 border border-black shadow-[3px_3px_0px_#000] uppercase">
+                ⚠ NOISE_LEVEL: {activeChar?.noiseLevel || 'LOW'}
+              </div>
+            </div>
+
+            {/* CONTAINER DIALOG UTAMA */}
+            <div
+              className="relative bg-neutral-950/95 backdrop-blur-md text-white px-8 sm:px-12 py-8 border-4 border-black transition-all duration-300 overflow-hidden"
+              style={{
+                boxShadow: `12px 12px 0px #000000, 0 0 40px ${themeColor}66`,
+                clipPath: 'polygon(0 0, 100% 0, 97% 100%, 0 100%)',
+              }}
+            >
+              <div
+                className="absolute inset-0 border-2 pointer-events-none transition-colors duration-300"
+                style={{ borderColor: themeColor }}
+              />
+
+              <div
+                className="absolute top-0 left-0 right-0 h-2 opacity-90"
+                style={{
+                  backgroundImage: `repeating-linear-gradient(-45deg, ${themeColor}, ${themeColor} 12px, #000000 12px, #000000 24px)`,
+                }}
+              />
+
+              <div
+                className="absolute inset-0 pointer-events-none opacity-25 mix-blend-overlay"
+                style={{
+                  backgroundImage:
+                    'radial-gradient(circle, #ffffff 2px, transparent 2px)',
+                  backgroundSize: '12px 12px',
+                }}
+              />
+
+              <div className="flex justify-between items-center text-[10px] sm:text-xs font-mono tracking-[0.3em] opacity-60 uppercase mb-4 pt-1">
+                <span className="flex items-center gap-2 font-bold" style={{ color: accentColor }}>
+                  ► KESSOKU BAND
+                </span>
+                <span>CH_ID // 0{activeCharIndex !== null ? activeCharIndex + 1 : 0}</span>
+              </div>
+
+              <div className="relative z-10 flex items-start gap-3 sm:gap-6 pr-12 sm:pr-24">
+                <span
+                  className="text-5xl sm:text-6xl font-black font-mono leading-none transition-colors duration-300"
+                  style={{ color: accentColor }}
+                >
+                  “
+                </span>
+                <p className="text-2xl sm:text-4xl font-black tracking-wide leading-relaxed text-white font-mono drop-shadow-[2px_2px_0px_#000]">
+                  {activeChar?.dialog || ''}
+                </p>
+                <span
+                  className="text-5xl sm:text-6xl font-black font-mono leading-none self-end transition-colors duration-300"
+                  style={{ color: accentColor }}
+                >
+                  ”
+                </span>
+              </div>
+
+              <div className="absolute bottom-4 right-8 flex items-center gap-4 z-10">
+                <div className="h-7 w-20 flex justify-between items-center bg-black/60 p-1 border border-white/30 shadow-[3px_3px_0px_#000]">
+                  {Array.from({ length: 14 }).map((_, i) => (
+                    <div
+                      key={i}
+                      className="h-full bg-white"
+                      style={{ width: i % 3 === 0 ? '3px' : '1px' }}
+                    />
+                  ))}
+                </div>
+
+                <button
+                  onClick={handleResetCamera}
+                  title="Kembali"
+                  className="w-8 h-8 border-2 border-black flex items-center justify-center text-black font-black transition-all duration-200 shadow-[4px_4px_0px_#000] hover:scale-110 hover:shadow-[6px_6px_0px_#000] active:translate-x-1 active:translate-y-1 active:shadow-[1px_1px_0px_#000] cursor-pointer pointer-events-auto"
+                  style={{ backgroundColor: accentColor }}
+                >
+                  <svg
+                    className="w-5 h-5 transform -rotate-45 stroke-current"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth={3}
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6"
+                    />
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </>
