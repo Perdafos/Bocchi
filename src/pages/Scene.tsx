@@ -41,7 +41,7 @@ const characters = [
     ty: -72,
     w: 'w-39',
     dialog: 'A-Awas, j-jangan terlalu dekat!!',
-    z: 10,
+    z: 3,
     color: '#ec4899',
     accentColor: '#22d3ee',
     role: 'GUITARIST',
@@ -83,7 +83,7 @@ const characters = [
     ty: -80,
     w: 'w-74',
     dialog: 'Kita-aan~',
-    z: 10,
+    z: 3,
     color: '#ef4444',
     accentColor: '#4ade80',
     role: 'VOCAL & GUITARIST',
@@ -101,7 +101,11 @@ const cameraTargets = [
   { scale: 2.4, x: -1000, y: -280, scroll: 4400 }, // 5: Kita
 ];
 
-const Scene = () => {
+interface SceneProps {
+  onCharacter?: (name: string) => void;
+}
+
+const Scene = ({ onCharacter }: SceneProps) => {
   const [mouseX, setMouseX] = useState<number | null>(null);
   const [, setIsZoomed] = useState<boolean>(false);
   const [activeCharIndex, setActiveCharIndex] = useState<number | null>(null);
@@ -354,7 +358,7 @@ const Scene = () => {
           trigger: scene,
           start: 'top top',
           end: `+=${seg * 7}`,
-          scrub: 0.1, // Nilai scrub lebih rendah agar tidak delay/lag saat di-scroll
+          scrub: 0.1,
           onUpdate: (self) => {
             if (cameraModeRef.current === 'free') return;
 
@@ -709,7 +713,7 @@ const Scene = () => {
                 <span>CH_ID // 0{activeCharIndex !== null ? activeCharIndex + 1 : 0}</span>
               </div>
 
-              <div className="relative z-10 flex items-start gap-3 sm:gap-6 pr-12 sm:pr-24">
+              <div className="relative z-10 flex items-start gap-3 sm:gap-6 pr-12 sm:pr-48">
                 <span
                   className="text-5xl sm:text-6xl font-black font-mono leading-none transition-colors duration-300"
                   style={{ color: accentColor }}
@@ -727,8 +731,9 @@ const Scene = () => {
                 </span>
               </div>
 
-              <div className="absolute bottom-4 right-8 flex items-center gap-4 z-10">
-                <div className="h-7 w-20 flex justify-between items-center bg-black/60 p-1 border border-white/30 shadow-[3px_3px_0px_#000]">
+              {/* ACTION BUTTONS & BARCODE */}
+              <div className="absolute bottom-4 right-8 flex items-center gap-3 z-10">
+                <div className="h-7 w-16 sm:w-20 hidden xs:flex justify-between items-center bg-black/60 p-1 border border-white/30 shadow-[3px_3px_0px_#000]">
                   {Array.from({ length: 14 }).map((_, i) => (
                     <div
                       key={i}
@@ -738,6 +743,23 @@ const Scene = () => {
                   ))}
                 </div>
 
+                {/* TOMBOL MORE / SELENGKAPNYA */}
+                {activeChar && (
+                  <button
+                    onClick={() => {
+                      if (onCharacter) {
+                        onCharacter(activeChar.name.toLowerCase());
+                      }
+                    }}
+                    title="Lihat Detail Karakter"
+                    className="px-4 h-8 border-2 border-black flex items-center justify-center text-white font-black font-mono text-xs tracking-wider uppercase transition-all duration-200 shadow-[4px_4px_0px_#000] hover:scale-105 hover:shadow-[6px_6px_0px_#000] active:translate-x-1 active:translate-y-1 active:shadow-[1px_1px_0px_#000] cursor-pointer pointer-events-auto"
+                    style={{ backgroundColor: themeColor }}
+                  >
+                    MORE ▶
+                  </button>
+                )}
+
+                {/* TOMBOL KEMBALI / RESET CAMERA */}
                 <button
                   onClick={handleResetCamera}
                   title="Kembali"
@@ -767,4 +789,4 @@ const Scene = () => {
   );
 };
 
-export default Scene;
+export default Scene; 

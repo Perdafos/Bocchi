@@ -26,10 +26,28 @@ const App = () => {
 
   return (
     <>
-      {screen === 'menu' && <Menu onStart={() => setScreen('scene')} onHome={() => setScreen('home')} onCharacter={(name) => { setCharacterName(name); setScreen('character'); }} />}
-      {screen === 'scene' && <Scene />}
+      {screen === 'menu' && (
+        <Menu
+          onStart={() => setScreen('scene')}
+          onHome={() => setScreen('home')}
+          onCharacter={(name) => {
+            setCharacterName(name);
+            setScreen('character');
+          }}
+        />
+      )}
+      {screen === 'scene' && (
+        <Scene
+          onCharacter={(name) => {
+            setCharacterName(name);
+            setScreen('character');
+          }}
+        />
+      )}
       {screen === 'home' && <Home />}
-      {screen === 'character' && CharacterPage && <CharacterPage />}
+      {screen === 'character' && CharacterPage && (
+        <CharacterPage onBack={() => setScreen('scene')} />
+      )}
     </>
   );
 };
