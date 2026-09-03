@@ -11,6 +11,7 @@ import Hitori from './pages/characters/Bocchi';
 import Nijika from './pages/characters/Nijika';
 import Ryo from './pages/characters/Ryo';
 import Kita from './pages/characters/Kita';
+import MusicPlayer from './components/MusicPlayer';
 
 const characterMap: Record<string, React.FC<{ onBack: () => void }>> = {
   seika: Seika,
@@ -71,6 +72,7 @@ createRoot(document.getElementById('root')!).render(
       assetManifest={assetManifest}
     >
       <AppWithPreloader />
+      <MusicPlayer />
     </PreloaderProvider>
   </StrictMode>,
 );
