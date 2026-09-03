@@ -323,14 +323,14 @@ const Scene = ({ onCharacter }: SceneProps) => {
     });
   };
 
-  // Entrance animation on mount — opacity 0→1, scale 1.05→1, blur 6px→0
+  // Entrance animation on mount — opacity 0→1, blur 6px→0
   useEffect(() => {
     if (!sceneRef.current) return;
     const ctx = gsap.context(() => {
       gsap.fromTo(
         sceneRef.current,
-        { opacity: 0, scale: 1.05, filter: 'blur(6px)' },
-        { opacity: 1, scale: 1, filter: 'blur(0px)', duration: 0.4, ease: 'power3.out' }
+        { opacity: 0, filter: 'blur(6px)' },
+        { opacity: 1, filter: 'blur(0px)', duration: 0.4, ease: 'power3.out' }
       );
     }, sceneRef);
     return () => ctx.revert();
