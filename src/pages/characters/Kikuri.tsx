@@ -9,10 +9,11 @@ gsap.registerPlugin(ScrollTrigger);
 
 interface HiroiProps {
   onBack?: () => void;
+  onReady?: () => void;
 }
 
-const Hiroi = ({ onBack }: HiroiProps) => {
-  const { sectionRef, isExiting, setupEntrance, handleBackClick } = useCharacterPageTransition(() => onBack?.());
+const Hiroi = ({ onBack, onReady }: HiroiProps) => {
+  const { sectionRef, isExiting, setupEntrance, handleBackClick } = useCharacterPageTransition(() => onBack?.(), onReady);
   const ticketRefs = useRef<(HTMLDivElement | null)[]>([]);
   const scissorsRef = useRef<HTMLDivElement>(null);
   const bounceTweenRef = useRef<gsap.core.Tween | null>(null);
@@ -219,8 +220,10 @@ const Hiroi = ({ onBack }: HiroiProps) => {
 
   // Animasi Masuk (Entrance Animation) saat halaman dibuka
   useEffect(() => {
-    return setupEntrance();
-  }, [setupEntrance]);
+    const cleanup = setupEntrance();
+    return cleanup;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // run once on mount only; setupEntrance is stable after mount
 
   const totalColumns = 12;
   const wordRepeats = Array.from({ length: 16 });

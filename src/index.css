@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Mochiy+Pop+One&family=Kosugi+Maru&display=swap');
 @import "tailwindcss";
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
@@ -121,4 +122,105 @@
   body {
     @apply bg-background text-foreground;
     }
+}
+
+@layer components {
+  .qmm * { font-family: 'Kosugi Maru', sans-serif; box-sizing: border-box; }
+  .qmm-wobble { font-family: 'Mochiy Pop One', 'Kosugi Maru', sans-serif; }
+
+  .qmm-outline {
+    color: #FFFFFF;
+    -webkit-text-stroke: 5px #1C1C1C;
+    paint-order: stroke fill;
+  }
+
+  .qmm-piece { position: absolute; }
+
+  .qmm-sticker-group {
+    position: absolute;
+    inset: 0;
+    filter:
+      drop-shadow(3px 0 0 #FFFFFF)
+      drop-shadow(-3px 0 0 #FFFFFF)
+      drop-shadow(0 3px 0 #FFFFFF)
+      drop-shadow(0 -3px 0 #FFFFFF)
+      drop-shadow(3px 3px 0 #FFFFFF)
+      drop-shadow(-3px -3px 0 #FFFFFF)
+      drop-shadow(3px -3px 0 #FFFFFF)
+      drop-shadow(-3px 3px 0 #FFFFFF)
+      drop-shadow(5px 5px 0 #1C1C1C)
+      drop-shadow(0 6px 6px rgba(0,0,0,0.3));
+  }
+
+  .qmm-ruler {
+    border: 2.5px solid #1C1C1C;
+    border-radius: 999px;
+    background:
+      repeating-linear-gradient(90deg, #1C1C1C 0 1.5px, transparent 1.5px 9px),
+      #FFFFFF;
+    background-position: center;
+    cursor: pointer;
+  }
+  .qmm-ruler-thumb {
+    position: absolute;
+    top: 50%;
+    width: 0; height: 0;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 8px solid #1C1C1C;
+    transform: translate(-50%, -2px);
+    pointer-events: none;
+  }
+
+  .qmm-tribar {
+    border: 2.5px solid #1C1C1C;
+    border-radius: 999px;
+    overflow: hidden;
+    display: flex;
+    cursor: pointer;
+  }
+  .qmm-tribar-mask {
+    position: absolute; top: 0; right: 0; bottom: 0;
+    background: rgba(255,255,255,0.72);
+    border-left: 2px solid #1C1C1C;
+  }
+
+  .qmm-btn {
+    background: #FFFFFF;
+    border: 2.5px solid #1C1C1C;
+    display: flex; align-items: center; justify-content: center;
+    color: #1C1C1C;
+    transition: transform 0.12s ease;
+    flex-shrink: 0;
+  }
+  .qmm-btn:hover { transform: scale(1.08); }
+  .qmm-btn:active { transform: scale(0.94); }
+
+  .qmm-play {
+    background: #2E62D9;
+    border: 3px solid #1C1C1C;
+    color: #FFFFFF;
+    border-radius: 999px;
+  }
+
+  .qmm-bubble {
+    background: #FFFFFF;
+    border: 2px solid #1C1C1C;
+    border-radius: 6px;
+  }
+  .qmm-bubble::after {
+    content: '';
+    position: absolute;
+    bottom: -5px; left: 8px;
+    width: 8px; height: 8px;
+    background: #FFFFFF;
+    border-right: 2px solid #1C1C1C;
+    border-bottom: 2px solid #1C1C1C;
+    transform: rotate(45deg);
+  }
+
+  .qmm-disc-spin { animation: qmm-spin 2.4s linear infinite; }
+  @keyframes qmm-spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+  .qmm-pulse { animation: qmm-pulse 1.4s ease-in-out infinite; }
+  @keyframes qmm-pulse { 0%,100% { opacity: 0.35; } 50% { opacity: 1; } }
 }

@@ -9,10 +9,11 @@ gsap.registerPlugin(ScrollTrigger);
 
 interface KitaProps {
   onBack?: () => void;
+  onReady?: () => void;
 }
 
-const Kita = ({ onBack }: KitaProps) => {
-  const { sectionRef, isExiting, setupEntrance, handleBackClick } = useCharacterPageTransition(() => onBack?.());
+const Kita = ({ onBack, onReady }: KitaProps) => {
+  const { sectionRef, isExiting, setupEntrance, handleBackClick } = useCharacterPageTransition(() => onBack?.(), onReady);
   const ticketRefs = useRef<(HTMLDivElement | null)[]>([]);
   const scissorsRef = useRef<HTMLDivElement>(null);
   const bounceTweenRef = useRef<gsap.core.Tween | null>(null);
@@ -220,8 +221,10 @@ const Kita = ({ onBack }: KitaProps) => {
 
   // Animasi Masuk (Entrance Animation) saat halaman dibuka
   useEffect(() => {
-    return setupEntrance();
-  }, [setupEntrance]);
+    const cleanup = setupEntrance();
+    return cleanup;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // run once on mount only; setupEntrance is stable after mount
 
   const totalColumns = 12;
   const wordRepeats = Array.from({ length: 16 });

@@ -9,10 +9,11 @@ gsap.registerPlugin(ScrollTrigger);
 
 interface SeikaProps {
   onBack?: () => void;
+  onReady?: () => void;
 }
 
-const Seika = ({ onBack }: SeikaProps) => {
-  const { sectionRef, isExiting, setupEntrance, handleBackClick } = useCharacterPageTransition(() => onBack?.());
+const Seika = ({ onBack, onReady }: SeikaProps) => {
+  const { sectionRef, isExiting, setupEntrance, handleBackClick } = useCharacterPageTransition(() => onBack?.(), onReady);
   const ticketRefs = useRef<(HTMLDivElement | null)[]>([]);
   const scissorsRef = useRef<HTMLDivElement>(null);
   const bounceTweenRef = useRef<gsap.core.Tween | null>(null);
@@ -219,8 +220,10 @@ const Seika = ({ onBack }: SeikaProps) => {
 
   // Animasi Masuk (Entrance Animation) saat halaman dibuka
   useEffect(() => {
-    return setupEntrance();
-  }, [setupEntrance]);
+    const cleanup = setupEntrance();
+    return cleanup;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // run once on mount only; setupEntrance is stable after mount
 
   const totalColumns = 12;
   const wordRepeats = Array.from({ length: 16 });
