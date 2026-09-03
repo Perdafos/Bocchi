@@ -598,7 +598,7 @@ const Bocchi = ({ onBack }: BocchiProps) => {
         {/* 2. Piringan CD Album */}
         <div className="absolute top-[450px] left-[300px] w-[290px] h-[290px] rounded-full z-[15] shadow-[0_20px_40px_rgba(0,0,0,0.85)] border border-white/20 overflow-hidden flex items-center justify-center">
           <img
-            src="img/hitori/album.png"
+            src="img/hitori/album.jpg"
             alt="Kessoku Band CD"
             className="absolute inset-0 w-full h-full object-cover filter brightness-[0.9] contrast-[1.05]"
             loading="eager" decoding="sync" fetchPriority="high"
