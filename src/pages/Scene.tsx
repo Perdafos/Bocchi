@@ -94,11 +94,11 @@ const characters = [
 
 const cameraTargets = [
   { scale: 3.2, x: 120, y: 240, scroll: 400 },    // 0: Seika
-  { scale: 3.5, x: -280, y: 100, scroll: 1200 },  // 1: Kikuri
+  { scale: 3.5, x: -180, y: 100, scroll: 1200 },  // 1: Kikuri
   { scale: 3.2, x: 380, y: -100, scroll: 2000 },  // 2: Hitori
-  { scale: 2.8, x: -420, y: 0, scroll: 2800 },    // 3: Nijika
+  { scale: 2.8, x: -320, y: -100, scroll: 2800 },    // 3: Nijika
   { scale: 2.2, x: 660, y: -160, scroll: 3600 },  // 4: Ryo
-  { scale: 2.4, x: -1000, y: -280, scroll: 4400 }, // 5: Kita
+  { scale: 2.4, x: -900, y: -280, scroll: 4400 }, // 5: Kita
 ];
 
 interface SceneProps {
@@ -323,7 +323,6 @@ const Scene = ({ onCharacter }: SceneProps) => {
     });
   };
 
-  // Entrance animation on mount — opacity 0→1, blur 6px→0
   useEffect(() => {
     if (!sceneRef.current) return;
     const ctx = gsap.context(() => {
@@ -540,21 +539,27 @@ const Scene = ({ onCharacter }: SceneProps) => {
             src="/img/background.jpg"
             alt=""
             className="w-full h-screen object-cover z-1 pointer-events-none"
-            loading="eager" decoding="sync" fetchPriority="high"
+            loading="eager"
+            decoding="sync"
+            fetchPriority="high"
           />
 
           <img
             src="/img/chairtable.png"
             alt=""
             className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full h-screen object-cover z-2 pointer-events-none"
-            loading="eager" decoding="sync" fetchPriority="high"
+            loading="eager"
+            decoding="sync"
+            fetchPriority="high"
           />
 
           <img
             src="/img/chairtablefront.png"
             alt=""
             className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full h-screen object-cover z-4 pointer-events-none"
-            loading="eager" decoding="sync" fetchPriority="high"
+            loading="eager"
+            decoding="sync"
+            fetchPriority="high"
           />
 
           <div
@@ -592,7 +597,9 @@ const Scene = ({ onCharacter }: SceneProps) => {
                   src={char.src}
                   alt={char.name}
                   className={`${char.w} pointer-events-auto select-none`}
-                  loading="eager" decoding="sync" fetchPriority="high"
+                  loading="eager"
+                  decoding="sync"
+                  fetchPriority="high"
                   draggable={false}
                   style={{
                     transform: `rotateY(${rotateY}deg)`,
@@ -642,7 +649,7 @@ const Scene = ({ onCharacter }: SceneProps) => {
             {/* 2. Sharp Speed Shards */}
             <svg
               viewBox="0 0 400 400"
-              className="absolute bottom-24 right-0 w-[350px] h-[350px] sm:w-[500px] sm:h-[500px]"
+              className="absolute bottom-0 right-0 w-[350px] h-[350px] sm:w-[500px] sm:h-[500px]"
             >
               <path
                 d="M50 400 L400 0 L400 150 L180 400 Z"
@@ -667,7 +674,7 @@ const Scene = ({ onCharacter }: SceneProps) => {
             </div>
           </div>
 
-          <div className="max-w-7xl mx-auto w-full relative z-10">
+          <div className="w-full relative z-10">
             {/* HEADER TAG NAMA + ROLE + CUTOUT BADGES */}
             <div className="flex flex-wrap items-center gap-3 mb-[-12px] relative z-20 pl-4 sm:pl-8">
               <div
@@ -694,12 +701,12 @@ const Scene = ({ onCharacter }: SceneProps) => {
               </div>
             </div>
 
-            {/* CONTAINER DIALOG UTAMA */}
+            {/* CONTAINER DIALOG UTAMA (DIPENDEKKAN DI BAGIAN KANAN) */}
             <div
-              className="relative bg-neutral-950/95 backdrop-blur-md text-white px-8 sm:px-12 py-8 border-4 border-black transition-all duration-300 overflow-hidden"
+              className="relative bg-neutral-950/95 backdrop-blur-md text-white px-6 sm:px-10 py-8 border-4 border-black transition-all duration-300 overflow-hidden max-w-[calc(100%-18rem)] sm:max-w-[72%] md:max-w-[70%]"
               style={{
                 boxShadow: `12px 12px 0px #000000, 0 0 40px ${themeColor}66`,
-                clipPath: 'polygon(0 0, 100% 0, 97% 100%, 0 100%)',
+                clipPath: 'polygon(0 0, 95% 0, 100% 100%, 0 100%)',
               }}
             >
               <div
@@ -730,7 +737,7 @@ const Scene = ({ onCharacter }: SceneProps) => {
                 <span>CH_ID // 0{activeCharIndex !== null ? activeCharIndex + 1 : 0}</span>
               </div>
 
-              <div className="relative z-10 flex items-start gap-3 sm:gap-6 pr-12 sm:pr-48">
+              <div className="relative z-10 flex items-start gap-3 sm:gap-6 pr-4 sm:pr-12">
                 <span
                   className="text-5xl sm:text-6xl font-black font-mono leading-none transition-colors duration-300"
                   style={{ color: accentColor }}
@@ -749,7 +756,7 @@ const Scene = ({ onCharacter }: SceneProps) => {
               </div>
 
               {/* ACTION BUTTONS & BARCODE */}
-              <div className="absolute bottom-4 right-8 flex items-center gap-3 z-10">
+              <div className="absolute bottom-4 right-6 sm:right-10 flex items-center gap-3 z-10">
                 <div className="h-7 w-16 sm:w-20 hidden xs:flex justify-between items-center bg-black/60 p-1 border border-white/30 shadow-[3px_3px_0px_#000]">
                   {Array.from({ length: 14 }).map((_, i) => (
                     <div
@@ -760,7 +767,7 @@ const Scene = ({ onCharacter }: SceneProps) => {
                   ))}
                 </div>
 
-                {/* TOMBOL MORE / SELENGKAPNYA DENGAN TRANSISI ANIMASI KELUAR */}
+                {/* TOMBOL MORE */}
                 {activeChar && (
                   <button
                     onClick={() => {
@@ -785,7 +792,7 @@ const Scene = ({ onCharacter }: SceneProps) => {
                   </button>
                 )}
 
-                {/* TOMBOL KEMBALI / RESET CAMERA */}
+                {/* TOMBOL RESET CAMERA */}
                 <button
                   onClick={handleResetCamera}
                   title="Kembali"
