@@ -24,26 +24,22 @@ const CharacterStripesBg: React.FC = () => (
 
 export const LoadingScreen: React.FC<LoadingScreenProps> = ({ onEnter }) => {
   const { progress, isComplete, startPreload } = usePreloader();
-  const [visible, setVisible] = useState(true);
   const [exiting, setExiting] = useState(false);
 
   useEffect(() => {
     startPreload();
-  }, []);
+  }, [startPreload]);
 
-  // Otomatis masuk ke web begitu preloading 100% selesai
+  // Fade out 500ms sebelum parent unmount kita (AppWithPreloader cek isComplete)
   useEffect(() => {
     if (isComplete) {
       setExiting(true);
       const timer = setTimeout(() => {
-        setVisible(false);
         onEnter?.();
       }, 500);
       return () => clearTimeout(timer);
     }
   }, [isComplete, onEnter]);
-
-  if (!visible) return null;
 
   return (
     <div

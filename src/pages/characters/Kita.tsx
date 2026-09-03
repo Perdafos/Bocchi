@@ -3,6 +3,7 @@ import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { MoveDown, User, Sparkles, Guitar, Mail, Scissors, ArrowLeft } from 'lucide-react';
 import Photocard from '../../components/Photocard';
+import { useCharacterPageTransition } from '../../hooks/useCharacterPageTransition';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -11,7 +12,7 @@ interface KitaProps {
 }
 
 const Kita = ({ onBack }: KitaProps) => {
-  const sectionRef = useRef<HTMLDivElement>(null);
+  const { sectionRef, isExiting, setupEntrance, handleBackClick } = useCharacterPageTransition(() => onBack?.());
   const ticketRefs = useRef<(HTMLDivElement | null)[]>([]);
   const scissorsRef = useRef<HTMLDivElement>(null);
   const bounceTweenRef = useRef<gsap.core.Tween | null>(null);
@@ -217,20 +218,10 @@ const Kita = ({ onBack }: KitaProps) => {
     );
   };
 
-  // Animasi Masuk (Entrance Animation) saat halaman dibuka dari tombol MORE
+  // Animasi Masuk (Entrance Animation) saat halaman dibuka
   useEffect(() => {
-    const ctx = gsap.context(() => {
-      const tl = gsap.timeline();
-
-      tl.fromTo(
-        sectionRef.current,
-        { opacity: 0, scale: 0.92, filter: 'blur(8px)' },
-        { opacity: 1, scale: 1, filter: 'blur(0px)', duration: 0.7, ease: 'power3.out' }
-      );
-    }, sectionRef);
-
-    return () => ctx.revert();
-  }, []);
+    return setupEntrance();
+  }, [setupEntrance]);
 
   const totalColumns = 12;
   const wordRepeats = Array.from({ length: 16 });
@@ -334,8 +325,9 @@ const Kita = ({ onBack }: KitaProps) => {
             <p>go to concert?!!</p>
           </div>
           <button
-            onClick={onBack}
-            className="flex items-center gap-1.5 px-3 py-1.5 bg-[#C82329] text-white font-mono font-bold text-xs border-2 border-white shadow-[3px_3px_0px_#fff] hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-[1px_1px_0px_#fff] transition-all cursor-pointer uppercase pointer-events-auto"
+            onClick={handleBackClick}
+            disabled={isExiting}
+            className="flex items-center gap-1.5 px-3 py-1.5 bg-[#C82329] text-white font-mono font-bold text-xs border-2 border-white shadow-[3px_3px_0px_#fff] hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-[1px_1px_0px_#fff] transition-all cursor-pointer uppercase pointer-events-auto disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <ArrowLeft className="w-4 h-4" /> BACK
           </button>
@@ -362,7 +354,7 @@ const Kita = ({ onBack }: KitaProps) => {
             return (
               <div
                 key={slide.id}
-                ref={(el) => (ticketRefs.current[idx] = el)}
+                ref={(el) => { ticketRefs.current[idx] = el; }}
                 className="absolute inset-0 w-full h-[360px] bg-white text-black p-5 shadow-[0_25px_60px_rgba(0,0,0,0.95)] flex border-2 border-black overflow-hidden select-none"
                 style={{
                   zIndex,
@@ -467,6 +459,7 @@ const Kita = ({ onBack }: KitaProps) => {
                         src={slide.photo}
                         alt={slide.caption}
                         className="w-full h-full object-cover object-top filter contrast-[1.05]"
+                        loading="eager" decoding="sync" fetchPriority="high"
                       />
                     </div>
                     <div className="text-center pt-0.5">
@@ -607,6 +600,7 @@ const Kita = ({ onBack }: KitaProps) => {
             src="img/kita/album.webp"
             alt="Kessoku Band CD"
             className="absolute inset-0 w-full h-full object-cover filter brightness-[0.9] contrast-[1.05]"
+            loading="eager" decoding="sync" fetchPriority="high"
             style={{ transform: 'scaleX(-1)' }}
           />
           <div

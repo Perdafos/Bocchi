@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 
 type MenuItem = {
   label: string;
-  action: 'start' | 'characters' | 'character' | 'settings' | 'quit';
+  action: 'start' | 'characters' | 'character' | 'settings' | 'quit' | 'home' | `character-${string}`;
 };
 
 const menuItems: MenuItem[] = [
@@ -101,6 +101,7 @@ const Menu = ({ onStart, onHome, onCharacter }: { onStart: () => void; onHome: (
         src="/img/starry.jpg"
         alt=""
         className="absolute inset-0 w-full h-full object-cover z-0"
+        loading="eager" decoding="sync" fetchPriority="high"
       />
       {/* Dark vignette overlay */}
       <div className="absolute inset-0 z-10 bg-gradient-to-b from-black/40 via-transparent to-black/70" />

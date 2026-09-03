@@ -323,6 +323,19 @@ const Scene = ({ onCharacter }: SceneProps) => {
     });
   };
 
+  // Entrance animation on mount — opacity 0→1, scale 1.05→1, blur 6px→0
+  useEffect(() => {
+    if (!sceneRef.current) return;
+    const ctx = gsap.context(() => {
+      gsap.fromTo(
+        sceneRef.current,
+        { opacity: 0, scale: 1.05, filter: 'blur(6px)' },
+        { opacity: 1, scale: 1, filter: 'blur(0px)', duration: 0.4, ease: 'power3.out' }
+      );
+    }, sceneRef);
+    return () => ctx.revert();
+  }, []);
+
   useEffect(() => {
     const lenis = new Lenis({
       duration: 1.2,
@@ -527,18 +540,21 @@ const Scene = ({ onCharacter }: SceneProps) => {
             src="/img/background.jpg"
             alt=""
             className="w-full h-screen object-cover z-1 pointer-events-none"
+            loading="eager" decoding="sync" fetchPriority="high"
           />
 
           <img
             src="/img/chairtable.png"
             alt=""
             className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full h-screen object-cover z-2 pointer-events-none"
+            loading="eager" decoding="sync" fetchPriority="high"
           />
 
           <img
             src="/img/chairtablefront.png"
             alt=""
             className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full h-screen object-cover z-4 pointer-events-none"
+            loading="eager" decoding="sync" fetchPriority="high"
           />
 
           <div
@@ -576,6 +592,7 @@ const Scene = ({ onCharacter }: SceneProps) => {
                   src={char.src}
                   alt={char.name}
                   className={`${char.w} pointer-events-auto select-none`}
+                  loading="eager" decoding="sync" fetchPriority="high"
                   draggable={false}
                   style={{
                     transform: `rotateY(${rotateY}deg)`,

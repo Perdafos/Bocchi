@@ -32,7 +32,6 @@ interface PhotocardProps {
   imgSrc?: string;
   title?: string;
   number?: string;
-  subtitle?: string;
   size?: 'sm' | 'md' | 'lg';
   photoScale?: number;
 }
@@ -48,7 +47,6 @@ const Photocard = ({
   imgSrc = 'img/kita/amaze.png',
   title = 'Ikuyo<br />Kita',
   number = '02',
-  subtitle = 'KESSOKU BAND',
   size = 'md',
   photoScale = 250,
 }: PhotocardProps) => {
@@ -156,12 +154,14 @@ const Photocard = ({
                 className="absolute w-full h-full object-contain object-left translate-x-3 -translate-y-5 opacity-40"
                 src={imgSrc}
                 alt="Shadow"
+                loading="eager" decoding="sync" fetchPriority="high"
                 style={{ filter: 'brightness(0.3) grayscale(100) opacity(0.5) blur(2px)', transform: `translateX(12px) translateY(-20px) scale(${photoScale})` }}
               />
               <img
                 className="absolute w-full h-full object-contain object-left translate-y-4 -translate-x-5"
                 src={imgSrc}
                 alt="Main"
+                loading="eager" decoding="sync" fetchPriority="high"
                 style={{ transform: `translateY(16px) translateX(-20px) scale(${photoScale * 0.833})`, filter: 'contrast(1.05)' }}
               />
             </div>

@@ -1,4 +1,4 @@
-import { StrictMode, useState, useEffect, useCallback } from 'react';
+import { StrictMode, useState, useEffect } from 'react';
 import { createRoot } from 'react-dom/client';
 import './index.css';
 import { PreloaderProvider, usePreloader } from './context/PreloaderContext';
@@ -22,7 +22,7 @@ const characterMap: Record<string, React.FC<{ onBack: () => void }>> = {
 };
 
 // ─────────────────────────────────────────────
-// Inner app — langsung ke Scene, skip Menu
+// Inner app — App tidak mount sampai preload selesai
 // ─────────────────────────────────────────────
 const AppWithPreloader: React.FC = () => {
   const [showApp, setShowApp] = useState(false);
@@ -31,45 +31,33 @@ const AppWithPreloader: React.FC = () => {
 
   const CharacterPage = characterMap[characterName];
 
-  // Mark ready setelah komponen mount
+  // App boleh mount + animate in setelah preload 100%
   useEffect(() => {
-    const timeout = setTimeout(() => {
-      markReady();
-      setShowApp(true);
-    }, 500);
-    return () => clearTimeout(timeout);
-  }, [markReady]);
-
-  const handleEnterApp = useCallback(() => {
+    if (!isComplete) return;
+    markReady();
     setShowApp(true);
-  }, []);
+  }, [isComplete, markReady]);
 
-  const handleCharacter = useCallback((name: string) => {
-    setCharacterName(name);
-  }, []);
+  // App TIDAK mount sama sekali sebelum preload selesai
+  if (!isComplete) {
+    return <LoadingScreen />;
+  }
 
-  const handleBackToScene = useCallback(() => {
-    setCharacterName('');
-  }, []);
-
+  // ShowApp false = animasi fade-in; true = fully visible
   return (
-    <>
-      <LoadingScreen onEnter={handleEnterApp} />
-
-      <div
-        className="transition-opacity duration-500"
-        style={{
-          opacity: showApp ? 1 : 0,
-          pointerEvents: showApp ? 'auto' : 'none',
-        }}
-      >
-        {characterName ? (
-          CharacterPage && <CharacterPage onBack={handleBackToScene} />
-        ) : (
-          <Scene onCharacter={handleCharacter} />
-        )}
-      </div>
-    </>
+    <div
+      className="transition-opacity duration-500"
+      style={{
+        opacity: showApp ? 1 : 0,
+        pointerEvents: showApp ? 'auto' : 'none',
+      }}
+    >
+      {characterName ? (
+        CharacterPage && <CharacterPage onBack={() => setCharacterName('')} />
+      ) : (
+        <Scene onCharacter={(name) => setCharacterName(name)} />
+      )}
+    </div>
   );
 };
 

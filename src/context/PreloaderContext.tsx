@@ -79,7 +79,7 @@ export const PreloaderProvider: React.FC<PreloaderProviderProps> = ({
   const completeResolveRef = useRef<(() => void) | null>(null);
   const initDoneRef = useRef(false);
 
-  // Calculate progress
+  // Calculate progress from actual loaded count — no simulation
   const stats = React.useMemo(() => {
     const arr = Array.from(tasks.values());
     return {
@@ -91,9 +91,9 @@ export const PreloaderProvider: React.FC<PreloaderProviderProps> = ({
 
   const progress = React.useMemo(() => {
     if (stats.total === 0) return 0;
-    const totalProgress = Array.from(tasks.values()).reduce((sum, t) => sum + t.progress, 0);
-    return Math.min(100, (totalProgress / stats.total) * 100);
-  }, [tasks, stats.total]);
+    // Real progress based on how many tasks have reached 'done'/'error'
+    return Math.round((stats.loaded / stats.total) * 100);
+  }, [stats]);
 
   // Update elapsed time
   useEffect(() => {
@@ -107,7 +107,7 @@ export const PreloaderProvider: React.FC<PreloaderProviderProps> = ({
   }, [phase]);
 
   // ─────────────────────────────────────────────
-  // Preload a single image
+  // Preload a single image — waits for decode()
   // ─────────────────────────────────────────────
   const preloadImage = useCallback((task: PreloadTask): Promise<void> => {
     return new Promise((resolve) => {
@@ -121,62 +121,38 @@ export const PreloaderProvider: React.FC<PreloaderProviderProps> = ({
         }
       };
 
-      img.onload = () => {
+      const markDone = () => {
         setTasks(prev => {
           const next = new Map(prev);
           next.set(task.id, { ...task, status: 'done', progress: 100 });
           return next;
         });
-        cleanup();
       };
 
-      img.onerror = () => {
+      const markError = () => {
         setTasks(prev => {
           const next = new Map(prev);
           next.set(task.id, { ...task, status: 'error', progress: 100, error: 'Failed to load' });
           return next;
         });
-        cleanup();
       };
 
-      // Track incremental progress for large images
-      if (img.complete) {
-        cleanup();
-        return;
-      }
-
-      // Simulate progress updates for visual feedback
-      let simulated = 0;
-      const progressInterval = setInterval(() => {
-        simulated = Math.min(90, simulated + Math.random() * 15);
-        setTasks(prev => {
-          const current = prev.get(task.id);
-          if (current && current.status === 'loading') {
-            const next = new Map(prev);
-            next.set(task.id, { ...current, progress: simulated });
-            return next;
+      img.onload = async () => {
+        try {
+          // Wait for decode() so image is fully ready for paint, not just network-complete
+          if (img.decode) {
+            await img.decode();
           }
-          return prev;
-        });
-      }, 80);
-
-      img.onload = () => {
-        clearInterval(progressInterval);
-        setTasks(prev => {
-          const next = new Map(prev);
-          next.set(task.id, { ...task, status: 'done', progress: 100 });
-          return next;
-        });
+          markDone();
+        } catch {
+          // decode() can reject for invalid images; still mark done since bytes are there
+          markDone();
+        }
         cleanup();
       };
 
       img.onerror = () => {
-        clearInterval(progressInterval);
-        setTasks(prev => {
-          const next = new Map(prev);
-          next.set(task.id, { ...task, status: 'error', progress: 100, error: 'Failed to load' });
-          return next;
-        });
+        markError();
         cleanup();
       };
 
@@ -196,7 +172,7 @@ export const PreloaderProvider: React.FC<PreloaderProviderProps> = ({
   const preloadFont = useCallback(async (task: PreloadTask): Promise<void> => {
     setTasks(prev => {
       const next = new Map(prev);
-      next.set(task.id, { ...task, status: 'loading', progress: 10 });
+      next.set(task.id, { ...task, status: 'loading', progress: 0 });
       return next;
     });
 
@@ -222,7 +198,7 @@ export const PreloaderProvider: React.FC<PreloaderProviderProps> = ({
   const preloadAudio = useCallback(async (task: PreloadTask): Promise<void> => {
     setTasks(prev => {
       const next = new Map(prev);
-      next.set(task.id, { ...task, status: 'loading', progress: 10 });
+      next.set(task.id, { ...task, status: 'loading', progress: 0 });
       return next;
     });
 
