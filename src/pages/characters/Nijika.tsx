@@ -1,3 +1,4 @@
+// FILE: src/pages/characters/Nijika.tsx
 import { useEffect, useRef, useState } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -21,7 +22,6 @@ const Nijika = ({ onBack, onReady }: NijikaProps) => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isTearing, setIsTearing] = useState(false);
 
-  // Drag Gesture States
   const [isDragging, setIsDragging] = useState(false);
   const [dragY, setDragY] = useState(0);
   const startYRef = useRef(0);
@@ -35,10 +35,10 @@ const Nijika = ({ onBack, onReady }: NijikaProps) => {
       content: (
         <div className="space-y-2.5 text-xs leading-relaxed text-black font-mono">
           <p className="font-semibold">
-            Hi everyone! I’m Nijika Ijichi, the drummer and the one who founded <span className="bg-[#eab308] text-black px-1 font-bold">Kessoku Band!</span>
+            Hi everyone! I’m Nijika Ijichi, the drummer and founder of <span className="bg-[#eab308] text-black px-1 font-bold">Kessoku Band!</span>
           </p>
           <p className="text-black/80">
-            I manage STARRY through my sister and work hard to make sure our band shines bright. I want to bring Kessoku Band to the big stages just like my sister's band used to be. With Hitori-chan, Ryo, and Kita-chan together, I know we can do anything!
+            I manage STARRY through my sister and work hard to make sure our band shines bright. My dream is to bring Kessoku Band to the big stage just like my sister's band used to do. Together with Hitori-chan, Ryo, and Kita-chan, I know we can achieve anything!
           </p>
         </div>
       ),
@@ -53,10 +53,10 @@ const Nijika = ({ onBack, onReady }: NijikaProps) => {
       icon: <Sparkles className="w-4 h-4 text-black" />,
       content: (
         <ul className="space-y-2 text-xs font-mono text-black list-disc list-inside">
-          <li>Known as the "heart and soul" of Kessoku Band for her cheerful energy.</li>
+          <li>Known as the "heart and soul" of Kessoku Band for her cheerful, binding energy.</li>
           <li>Obsessed with Doritos (specifically her iconic triangular hair accessory).</li>
-          <li>Expert at keeping the band members grounded and motivated.</li>
-          <li>Has a pet cat named Ikuyo (named after Kita before they officially met!).</li>
+          <li>Expert at keeping all the quirky band members grounded and motivated.</li>
+          <li>Has a pet cat named Ikuyo (named before she officially met Kita!).</li>
         </ul>
       ),
       photo: 'img/nijika/funfact.jpg',
@@ -118,7 +118,6 @@ const Nijika = ({ onBack, onReady }: NijikaProps) => {
     },
   ];
 
-  // Smooth Looping Bounce Animation
   useEffect(() => {
     if (scissorsRef.current) {
       bounceTweenRef.current = gsap.to(scissorsRef.current, {
@@ -137,7 +136,6 @@ const Nijika = ({ onBack, onReady }: NijikaProps) => {
 
   const playTuingAnimation = () => {
     if (!scissorsRef.current || isTearing) return;
-
     if (bounceTweenRef.current) bounceTweenRef.current.pause();
 
     gsap.timeline({
@@ -218,12 +216,10 @@ const Nijika = ({ onBack, onReady }: NijikaProps) => {
     );
   };
 
-  // Animasi Masuk (Entrance Animation) saat halaman dibuka
   useEffect(() => {
     const cleanup = setupEntrance();
     return cleanup;
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []); // run once on mount only; setupEntrance is stable after mount
+  }, []);
 
   const totalColumns = 12;
   const wordRepeats = Array.from({ length: 16 });
@@ -240,7 +236,6 @@ const Nijika = ({ onBack, onReady }: NijikaProps) => {
         `,
       }}
     >
-      {/* --- BACKGROUND TYPOGRAPHY PATTERN --- */}
       <div className="absolute inset-0 flex justify-between items-center opacity-30 px-4 pointer-events-none z-0">
         {Array.from({ length: totalColumns }).map((_, colIdx) => {
           const isOddCol = colIdx % 2 !== 0;
@@ -269,7 +264,6 @@ const Nijika = ({ onBack, onReady }: NijikaProps) => {
         })}
       </div>
 
-      {/* --- GLOBAL FULL-SCREEN LIGHTING & SHADOW OVERLAYS --- */}
       <div className="absolute inset-0 pointer-events-none z-50 overflow-hidden">
         <div
           className="absolute inset-0 mix-blend-multiply opacity-90"
@@ -304,7 +298,6 @@ const Nijika = ({ onBack, onReady }: NijikaProps) => {
         />
       </div>
 
-      {/* --- OVERLAY TEXT UI & TOMBOL KEMBALI KE MAIN --- */}
       <div className="relative z-60 h-full flex flex-col justify-between p-8 text-white font-medium text-sm tracking-tight pointer-events-none">
         <div className="w-full grid grid-cols-3 items-start">
           <div className="leading-tight">
@@ -323,8 +316,8 @@ const Nijika = ({ onBack, onReady }: NijikaProps) => {
 
         <div className="w-full flex justify-between items-end">
           <div className="leading-tight">
-            <p className="font-bold">They're</p>
-            <p>go to concert?!!</p>
+            <p className="font-bold">Let's make</p>
+            <p>our dreams come true!</p>
           </div>
           <button
             onClick={handleBackClick}
@@ -334,13 +327,12 @@ const Nijika = ({ onBack, onReady }: NijikaProps) => {
             <ArrowLeft className="w-4 h-4" /> BACK
           </button>
           <div className="text-right leading-tight">
-            <p className="font-bold">let's buy</p>
+            <p className="font-bold">Let's buy</p>
             <p>the tickets</p>
           </div>
         </div>
       </div>
 
-      {/* --- STACKED TICKET CAROUSEL CONTAINER --- */}
       <div className="absolute top-1/2 right-[3%] -translate-y-1/2 w-[590px] z-40 flex flex-col gap-3 font-mono">
         <div className="relative w-full h-[360px]">
           {slides.map((slide, idx) => {
@@ -371,7 +363,7 @@ const Nijika = ({ onBack, onReady }: NijikaProps) => {
                     backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`,
                   }}
                 />
-                
+
                 <div className="absolute -top-3.5 left-[370px] w-6 h-6 bg-[#121212] rounded-full z-40 border border-black" />
                 <div className="absolute -bottom-3.5 left-[370px] w-6 h-6 bg-[#121212] rounded-full z-40 border border-black" />
                 <div className="absolute top-0 bottom-0 left-[381px] border-l-2 border-dashed border-black/70 z-30" />
@@ -491,7 +483,6 @@ const Nijika = ({ onBack, onReady }: NijikaProps) => {
         </div>
       </div>
 
-      {/* --- DECORATIVE COLLAGE ELEMENTS ON THE LEFT SIDE --- */}
       <div className="absolute top-100 left-100 -translate-x-1/2 -translate-y-1/2 w-[550px] h-[650px]">
         <div className="absolute -inset-40 pointer-events-none z-50 mix-blend-screen opacity-40">
           {Array.from({ length: 14 }).map((_, i) => {
@@ -508,7 +499,6 @@ const Nijika = ({ onBack, onReady }: NijikaProps) => {
           })}
         </div>
 
-        {/* 1. Tiket Penerbangan */}
         <div className="absolute top-10 -right-24 w-[210px] h-[480px] bg-white text-black rotate-[12deg] shadow-[0_20px_40px_rgba(0,0,0,0.8)] z-10 rounded-xs overflow-hidden border border-black/10 flex flex-col justify-between font-mono">
           <div
             className="absolute inset-0 pointer-events-none opacity-15 mix-blend-multiply z-20"
@@ -598,7 +588,6 @@ const Nijika = ({ onBack, onReady }: NijikaProps) => {
           </div>
         </div>
 
-        {/* 2. Piringan CD Album */}
         <div className="absolute top-[450px] left-[300px] w-[290px] h-[290px] rounded-full z-[15] shadow-[0_20px_40px_rgba(0,0,0,0.85)] border border-white/20 overflow-hidden flex items-center justify-center">
           <img
             src="img/nijika/album.jpg"
@@ -627,10 +616,8 @@ const Nijika = ({ onBack, onReady }: NijikaProps) => {
           </div>
         </div>
 
-        {/* 3. Photocard */}
-        <Photocard imgSrc={nijikaImgSrc} photoScale={1} />
+        <Photocard imgSrc={nijikaImgSrc} photoScale={1.3} />
 
-        {/* 4. Tiket Konser Besar (Kiri Bawah) */}
         <div
           className="absolute bottom-[0px] left-[0px] w-[500px] h-[160px] bg-white text-black font-sans shadow-[0_30px_60px_rgba(0,0,0,0.85)] flex border border-black/15 select-none z-30 rotate-12"
           style={{

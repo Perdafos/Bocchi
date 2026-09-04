@@ -127,6 +127,7 @@ const Scene = ({ onCharacter }: SceneProps) => {
   const scrollTriggerRef = useRef<ScrollTrigger | null>(null);
   const cameraTweenRef = useRef<gsap.core.Timeline | null>(null);
   const lastActiveIndexRef = useRef<number | null>(null);
+  const scrollTickRef = useRef<number>(0);
 
   const handleMouseMove = useCallback((e: MouseEvent) => {
     setMouseX(e.clientX);
@@ -363,7 +364,7 @@ const Scene = ({ onCharacter }: SceneProps) => {
       const seg = 800;
       const totalSteps = 6;
 
-      gsap.set(wrapper, { transformOrigin: 'center center' });
+      gsap.set(wrapper, { transformOrigin: 'center center', willChange: 'transform, opacity' });
 
       const tl = gsap.timeline({
         scrollTrigger: {
@@ -375,6 +376,10 @@ const Scene = ({ onCharacter }: SceneProps) => {
             if (cameraModeRef.current === 'free') return;
 
             const p = self.progress;
+
+            // Simple throttle: only run on ~every 3rd scroll tick to reduce main-thread load
+            scrollTickRef.current += 1;
+            if (scrollTickRef.current % 3 !== 0) return;
 
             if (p <= 0.05 || p >= 0.95) {
               if (lastActiveIndexRef.current !== null) {
@@ -604,6 +609,7 @@ const Scene = ({ onCharacter }: SceneProps) => {
                   style={{
                     transform: `rotateY(${rotateY}deg)`,
                     transformStyle: 'preserve-3d',
+                    willChange: 'transform',
                   }}
                 />
               </div>

@@ -41,10 +41,8 @@ const AppWithPreloader: React.FC = () => {
     setShowApp(true);
   }, [isComplete, markReady]);
 
-  // Stable callbacks — must be declared above any conditional return
-  // to satisfy Rules of Hooks.
   const handleHidden = useCallback(() => {
-    // Overlay has finished fading out; nothing extra needed.
+    // Overlay has finished fading out
   }, []);
 
   const handleCharacterReady = useCallback(() => {
@@ -79,17 +77,40 @@ const AppWithPreloader: React.FC = () => {
             />
           )
         ) : (
-          <Scene
-            onCharacter={(name) => {
-              // 1. Show white overlay first
-              setIsTransitioning(true);
-              // 2. Defer character mount by a frame so overlay is visibly
-              //    closing in before the heavy render begins
-              requestAnimationFrame(() => {
-                setCharacterName(name);
-              });
-            }}
-          />
+          <div className="relative w-full h-screen overflow-hidden">
+            {/* --- OPTION 3: MINIMAL SOFT VIGNETTE & RIM LIGHT --- */}
+            <div className="absolute inset-0 pointer-events-none z-10 overflow-hidden">
+              {/* Simple Smooth Vignette */}
+              <div
+                className="absolute inset-0 mix-blend-multiply opacity-85"
+                style={{
+                  background: `radial-gradient(circle at 50% 45%, transparent 40%, rgba(0,0,0,0.5) 75%, rgba(0,0,0,0.9) 100%)`,
+                }}
+              />
+
+              {/* Subtle Top Overhead Light Strip */}
+              <div
+                className="absolute top-0 left-0 right-0 h-48 mix-blend-screen opacity-25"
+                style={{
+                  background:
+                    'linear-gradient(to bottom, rgba(255,255,255,0.6) 0%, rgba(255,255,255,0.1) 60%, transparent 100%)',
+                  filter: 'blur(10px)',
+                }}
+              />
+            </div>
+
+            {/* Main Interactive Scene Component */}
+            <Scene
+              onCharacter={(name) => {
+                // 1. Show white overlay first
+                setIsTransitioning(true);
+                // 2. Defer character mount by a frame
+                requestAnimationFrame(() => {
+                  setCharacterName(name);
+                });
+              }}
+            />
+          </div>
         )}
       </div>
     </>
