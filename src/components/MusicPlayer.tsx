@@ -228,6 +228,7 @@ const MusicPlayer: React.FC = () => {
 
   return (
     <div className="fixed bottom-2 right-2 z-50 select-none" style={{ width: 288, height: 178 }}>
+
       <div className="qmm relative w-full h-full">
         <div className="qmm-sticker-group">
           {/* Header */}
