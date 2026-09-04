@@ -651,7 +651,7 @@ const Scene = ({ onCharacter }: SceneProps) => {
               viewBox="0 0 400 400"
               className="absolute bottom-0 right-0 w-[350px] h-[350px] sm:w-[500px] sm:h-[500px]"
             >
-              <path
+            <path
                 d="M50 400 L400 0 L400 150 L180 400 Z"
                 fill={accentColor}
                 className="opacity-40 transition-colors duration-300"

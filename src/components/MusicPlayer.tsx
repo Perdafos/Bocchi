@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, useCallback, useMemo, memo } from 'react';
+import { useState, useRef, useEffect, useCallback, memo } from 'react';
 import { Play, Pause, SkipBack, SkipForward, Volume2, VolumeX, Music } from 'lucide-react';
 
 // Atur kerenggangan/kerapatan teks judul untuk SETIAP TRACK di sini secara bebas
